@@ -173,54 +173,7 @@
       transition: width 0.4s ease-out;
     }
 
-    /* High School Box */
-    .hs-box {
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .hs-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #37352f;
-    }
-
-    .hs-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .hs-right input {
-      width: 50px;
-      padding: 4px;
-      font-size: 12px;
-      font-weight: 700;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      text-align: center;
-      outline: none;
-    }
-
-    .select-mini {
-      font-size: 11px;
-      font-weight: 600;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      padding: 4px;
-      outline: none;
-      background: #ffffff;
-      color: #37352f;
-    }
-
-    /* Year Blocks - Custom Palette Gradient */
+    /* Year & High School Blocks */
     .year-block {
       margin-bottom: 16px;
       border: 1px solid #e2e8f0;
@@ -229,11 +182,46 @@
     }
 
     .year-header {
-      padding: 7px 12px;
+      padding: 8px 12px;
       font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.3px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: opacity 0.2s;
     }
+
+    .year-header:hover {
+      opacity: 0.9;
+    }
+
+    .year-header-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toggle-icon {
+      font-size: 9px;
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .year-summary-badge {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0.9;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* High School Block Styling */
+    .year-hs { border-color: #cbd5e1; }
+    .year-hs .year-header { background: #F0F3F4; color: #475569; }
 
     /* Year 1: #dbe1e4 */
     .year-y1 { border-color: #cbd4d9; }
@@ -263,6 +251,10 @@
       background: #ffffff;
     }
 
+    .year-block.collapsed .semesters-grid {
+      display: none;
+    }
+
     /* Semester Blocks */
     .sem-box {
       border-radius: 6px;
@@ -280,6 +272,11 @@
       border-left: 3px solid #656e7e;
     }
 
+    .sem-box.sem-hs {
+      background: #f8fafc;
+      border-left: 3px solid #64748b;
+    }
+
     .sem-title {
       font-size: 11px;
       font-weight: 700;
@@ -292,6 +289,7 @@
 
     .sem-fall .sem-label { color: #656e7e; }
     .sem-spring .sem-label { color: #2c313f; }
+    .sem-hs .sem-label { color: #475569; }
 
     /* Course Rows */
     .course-list {
@@ -463,22 +461,6 @@
       </div>
     </div>
 
-    <!-- High School Credits -->
-    <div class="hs-box">
-      <span class="hs-label">High School Credit</span>
-      <div class="hs-right">
-        <input type="number" id="hsCredits" min="0" placeholder="0" oninput="recalculate()">
-        <span style="font-size: 11px; font-weight: 700; color: #7a7a7a;">cr towards</span>
-        <select class="select-mini" id="hsCategory" onchange="recalculate()">
-          <option value="core">Core</option>
-          <option value="major">Major</option>
-          <option value="elec" selected>Elective</option>
-          <option value="gccr">GCCR</option>
-          <option value="none">Other</option>
-        </select>
-      </div>
-    </div>
-
     <!-- Plan Semesters -->
     <div id="planContainer"></div>
 
@@ -491,35 +473,61 @@
 
     const CAT_GOALS = { core: 30, major: 48, elec: 21, gccr: 5 };
 
-    const defaultYears = [
-      { id: 'y1', name: "Year 1 (Freshman)", yearClass: "year-y1", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
-      { id: 'y2', name: "Year 2 (Sophomore)", yearClass: "year-y2", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
-      { id: 'y3', name: "Year 3 (Junior)", yearClass: "year-y3", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
-      { id: 'y4', name: "Year 4 (Senior)", yearClass: "year-y4", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
-      { id: 'y5', name: "Year 5", yearClass: "year-y5", defaultDegree: "mast", sems: ['Fall', 'Spring'] }
+    const defaultBlocks = [
+      { id: 'hs', name: "High School Credit", yearClass: "year-hs", defaultDegree: "bach", defaultCat: "elec", sems: ['AP'] },
+      { id: 'y1', name: "Year 1 (Freshman)", yearClass: "year-y1", defaultDegree: "bach", defaultCat: "core", sems: ['Fall', 'Spring'] },
+      { id: 'y2', name: "Year 2 (Sophomore)", yearClass: "year-y2", defaultDegree: "bach", defaultCat: "core", sems: ['Fall', 'Spring'] },
+      { id: 'y3', name: "Year 3 (Junior)", yearClass: "year-y3", defaultDegree: "bach", defaultCat: "major", sems: ['Fall', 'Spring'] },
+      { id: 'y4', name: "Year 4 (Senior)", yearClass: "year-y4", defaultDegree: "bach", defaultCat: "major", sems: ['Fall', 'Spring'] },
+      { id: 'y5', name: "Year 5", yearClass: "year-y5", defaultDegree: "mast", defaultCat: "major", sems: ['Fall', 'Spring'] }
     ];
 
-    let store = JSON.parse(localStorage.getItem('major_tracker_data_amp') || '{}');
+    let store = JSON.parse(localStorage.getItem('major_tracker_data_amp_v2') || '{}');
+    let collapsedState = JSON.parse(localStorage.getItem('major_tracker_collapsed') || '{}');
 
     window.onload = function() {
-      if (store.hsCredits !== undefined) document.getElementById('hsCredits').value = store.hsCredits;
-      if (store.hsCategory !== undefined) document.getElementById('hsCategory').value = store.hsCategory;
-      
       renderPlan();
       recalculate();
     };
+
+    function toggleYear(yearId) {
+      collapsedState[yearId] = !collapsedState[yearId];
+      localStorage.setItem('major_tracker_collapsed', JSON.stringify(collapsedState));
+
+      const yearBlock = document.getElementById(`block_${yearId}`);
+      const icon = yearBlock.querySelector('.toggle-icon');
+
+      if (collapsedState[yearId]) {
+        yearBlock.classList.add('collapsed');
+        if (icon) icon.innerText = '►';
+      } else {
+        yearBlock.classList.remove('collapsed');
+        if (icon) icon.innerText = '▼';
+      }
+    }
 
     function renderPlan() {
       const container = document.getElementById('planContainer');
       container.innerHTML = '';
 
-      defaultYears.forEach(y => {
+      defaultBlocks.forEach(y => {
+        const isCollapsed = !!collapsedState[y.id];
+
         const yearBlock = document.createElement('div');
-        yearBlock.className = `year-block ${y.yearClass}`;
+        yearBlock.id = `block_${y.id}`;
+        yearBlock.className = `year-block ${y.yearClass} ${isCollapsed ? 'collapsed' : ''}`;
 
         const header = document.createElement('div');
         header.className = 'year-header';
-        header.innerText = y.name;
+        header.onclick = () => toggleYear(y.id);
+
+        header.innerHTML = `
+          <div class="year-header-left">
+            <span class="toggle-icon">${isCollapsed ? '►' : '▼'}</span>
+            <span>${y.name}</span>
+          </div>
+          <span class="year-summary-badge" id="badge_year_${y.id}">0 cr contributed</span>
+        `;
         yearBlock.appendChild(header);
 
         const semGrid = document.createElement('div');
@@ -527,9 +535,12 @@
 
         y.sems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
-          const isFall = semName === 'Fall';
+          let semStyle = 'sem-hs';
+          if (semName === 'Fall') semStyle = 'sem-fall';
+          if (semName === 'Spring') semStyle = 'sem-spring';
+
           const semBox = document.createElement('div');
-          semBox.className = `sem-box ${isFall ? 'sem-fall' : 'sem-spring'}`;
+          semBox.className = `sem-box ${semStyle}`;
 
           semBox.innerHTML = `
             <div class="sem-title">
@@ -537,7 +548,7 @@
               <span id="tot_${semKey}" style="font-size:10px; color:#64748b;">0 cr</span>
             </div>
             <div class="course-list" id="list_${semKey}"></div>
-            <button class="btn-add" onclick="addCourse('${semKey}', '', 3, false, '${y.defaultDegree}', 'core')">+ Add Course</button>
+            <button class="btn-add" onclick="addCourse('${semKey}', '', 3, false, '${y.defaultDegree}', '${y.defaultCat}')">+ Add Course</button>
           `;
 
           semGrid.appendChild(semBox);
@@ -546,14 +557,14 @@
         yearBlock.appendChild(semGrid);
         container.appendChild(yearBlock);
 
-        // Populate saved courses or initial blank row
+        // Populate saved courses or initial row
         y.sems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const savedCourses = store[semKey] || [];
           if (savedCourses.length === 0 && !store.initialized) {
-            addCourse(semKey, '', 3, false, y.defaultDegree, 'core');
+            addCourse(semKey, '', 3, false, y.defaultDegree, y.defaultCat);
           } else {
-            savedCourses.forEach(c => addCourse(semKey, c.name, c.credits, c.done, c.degree || y.defaultDegree, c.category || 'core'));
+            savedCourses.forEach(c => addCourse(semKey, c.name, c.credits, c.done, c.degree || y.defaultDegree, c.category || y.defaultCat));
           }
         });
       });
@@ -604,22 +615,16 @@
     }
 
     function recalculate() {
-      const hsVal = parseFloat(document.getElementById('hsCredits').value) || 0;
-      const hsCat = document.getElementById('hsCategory').value;
-
-      let bachEarned = hsVal;
+      let bachEarned = 0;
       let mastEarned = 0;
 
-      const catEarned = {
-        core: hsCat === 'core' ? hsVal : 0,
-        major: hsCat === 'major' ? hsVal : 0,
-        elec: hsCat === 'elec' ? hsVal : 0,
-        gccr: hsCat === 'gccr' ? hsVal : 0
-      };
+      const catEarned = { core: 0, major: 0, elec: 0, gccr: 0 };
+      const newStore = { initialized: true };
 
-      const newStore = { hsCredits: hsVal, hsCategory: hsCat, initialized: true };
+      defaultBlocks.forEach(y => {
+        let yearBachEarned = 0;
+        let yearMastEarned = 0;
 
-      defaultYears.forEach(y => {
         y.sems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const list = document.getElementById(`list_${semKey}`);
@@ -642,8 +647,10 @@
               semTotal += cr;
               if (deg === 'mast') {
                 mastEarned += cr;
+                yearMastEarned += cr;
               } else {
                 bachEarned += cr;
+                yearBachEarned += cr;
                 if (catEarned[cat] !== undefined) {
                   catEarned[cat] += cr;
                 }
@@ -655,9 +662,21 @@
           const semTotalSpan = document.getElementById(`tot_${semKey}`);
           if (semTotalSpan) semTotalSpan.innerText = semTotal + ' cr earned';
         });
+
+        // Update Year Total Summary Badge
+        const yearBadge = document.getElementById(`badge_year_${y.id}`);
+        if (yearBadge) {
+          if (yearBachEarned > 0 && yearMastEarned > 0) {
+            yearBadge.innerText = `${yearBachEarned} Bach / ${yearMastEarned} Mast cr`;
+          } else if (yearMastEarned > 0) {
+            yearBadge.innerText = `${yearMastEarned} Mast cr contributed`;
+          } else {
+            yearBadge.innerText = `${yearBachEarned} cr contributed`;
+          }
+        }
       });
 
-      localStorage.setItem('major_tracker_data_amp', JSON.stringify(newStore));
+      localStorage.setItem('major_tracker_data_amp_v2', JSON.stringify(newStore));
 
       // Degree Rings
       const bachPercent = Math.min(100, Math.round((bachEarned / BACH_GOAL) * 100));
