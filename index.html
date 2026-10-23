@@ -22,7 +22,7 @@
 
     .container {
       width: 100%;
-      max-width: 920px;
+      max-width: 960px;
       background: #ffffff;
       border: none;
       border-radius: 10px;
@@ -173,7 +173,7 @@
       transition: width 0.4s ease-out;
     }
 
-    /* Year & High School Blocks */
+    /* Year Blocks */
     .year-block {
       margin-bottom: 16px;
       border: 1px solid #e2e8f0;
@@ -186,16 +186,11 @@
       font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.3px;
-      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
       user-select: none;
-      transition: opacity 0.2s;
-    }
-
-    .year-header:hover {
-      opacity: 0.9;
+      cursor: pointer;
     }
 
     .year-header-left {
@@ -243,23 +238,31 @@
     .year-y5 { border-color: #1e222d; }
     .year-y5 .year-header { background: #2c313f; color: #ffffff; }
 
-    .semesters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 10px;
+    .year-body {
       padding: 10px;
       background: #ffffff;
     }
 
-    .year-block.collapsed .semesters-grid {
+    .year-block.collapsed .year-body {
       display: none;
     }
 
-    /* Semester Blocks */
+    /* Full Width Flex Grid */
+    .semesters-grid {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    /* Semester Blocks - Flexible equal width */
     .sem-box {
+      flex: 1;
+      min-width: 0;
       border-radius: 6px;
       padding: 8px;
       border: 1px solid #e2e8f0;
+      transition: flex 0.2s ease-out;
     }
 
     .sem-box.sem-fall {
@@ -270,6 +273,12 @@
     .sem-box.sem-spring {
       background: #f7f9fa;
       border-left: 3px solid #656e7e;
+    }
+
+    /* Darker shade of Spring for Summer */
+    .sem-box.sem-summer {
+      background: #edf1f4;
+      border-left: 3px solid #3d4653;
     }
 
     .sem-box.sem-hs {
@@ -285,18 +294,65 @@
       margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      height: 18px; /* Fixed height so button aligns inline with titles */
+    }
+
+    .summer-btn-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 8px; /* Vertically aligns with the semester titles inside the sem-boxes */
+    }
+
+    /* Standalone Plus / X Button inline with semester titles */
+    .btn-summer-plus {
+      width: 20px;
+      height: 20px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-summer-plus:hover {
+      background: #f1f5f9;
+      color: #334155;
+      border-color: #8c9aa7;
+    }
+
+    .btn-summer-plus.active-x {
+      color: #ef4444;
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+
+    .btn-summer-plus.active-x:hover {
+      background: #fee2e2;
+      border-color: #f87171;
     }
 
     .sem-fall .sem-label { color: #656e7e; }
     .sem-spring .sem-label { color: #2c313f; }
+    .sem-summer .sem-label { color: #232832; }
     .sem-hs .sem-label { color: #475569; }
 
-    /* Course Rows */
+    /* Course Rows & Drag Handle */
     .course-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
       margin-bottom: 6px;
+      min-height: 10px;
     }
 
     .course-row {
@@ -307,6 +363,26 @@
       padding: 4px;
       border: 1px solid #e2e8f0;
       border-radius: 4px;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .course-row.dragging {
+      opacity: 0.4;
+      background: #f1f5f9;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .drag-handle {
+      cursor: grab;
+      color: #a0a0a0;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
     }
 
     .course-chk {
@@ -318,7 +394,7 @@
 
     .course-name {
       flex: 1;
-      min-width: 90px;
+      min-width: 60px;
       border: none;
       outline: none;
       font-size: 11px;
@@ -328,10 +404,10 @@
     }
 
     .course-credits {
-      width: 30px;
+      width: 28px;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 2px;
+      padding: 2px 1px;
       font-size: 11px;
       font-weight: 600;
       text-align: center;
@@ -344,7 +420,7 @@
       font-weight: 600;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 2px;
+      padding: 2px 1px;
       background: #ffffff;
       color: #37352f;
       outline: none;
@@ -380,6 +456,13 @@
     .btn-add:hover {
       background: #f1f5f9;
       color: #334155;
+    }
+
+    /* Responsive adjustment for small Notion embeds */
+    @media (max-width: 640px) {
+      .semesters-grid {
+        flex-direction: column;
+      }
     }
 
     /* Remove Spin Arrows */
@@ -474,16 +557,17 @@
     const CAT_GOALS = { core: 30, major: 48, elec: 21, gccr: 5 };
 
     const defaultBlocks = [
-      { id: 'hs', name: "High School Credit", yearClass: "year-hs", defaultDegree: "bach", defaultCat: "elec", sems: ['AP'] },
-      { id: 'y1', name: "Year 1 (Freshman)", yearClass: "year-y1", defaultDegree: "bach", defaultCat: "core", sems: ['Fall', 'Spring'] },
-      { id: 'y2', name: "Year 2 (Sophomore)", yearClass: "year-y2", defaultDegree: "bach", defaultCat: "core", sems: ['Fall', 'Spring'] },
-      { id: 'y3', name: "Year 3 (Junior)", yearClass: "year-y3", defaultDegree: "bach", defaultCat: "major", sems: ['Fall', 'Spring'] },
-      { id: 'y4', name: "Year 4 (Senior)", yearClass: "year-y4", defaultDegree: "bach", defaultCat: "major", sems: ['Fall', 'Spring'] },
-      { id: 'y5', name: "Year 5", yearClass: "year-y5", defaultDegree: "mast", defaultCat: "major", sems: ['Fall', 'Spring'] }
+      { id: 'hs', name: "High School Credit", yearClass: "year-hs", defaultDegree: "bach", defaultCat: "elec", allowSummerToggle: false, baseSems: ['AP'] },
+      { id: 'y1', name: "Year 1 (Freshman)", yearClass: "year-y1", defaultDegree: "bach", defaultCat: "core", allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y2', name: "Year 2 (Sophomore)", yearClass: "year-y2", defaultDegree: "bach", defaultCat: "core", allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y3', name: "Year 3 (Junior)", yearClass: "year-y3", defaultDegree: "bach", defaultCat: "major", allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y4', name: "Year 4 (Senior)", yearClass: "year-y4", defaultDegree: "bach", defaultCat: "major", allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y5', name: "Year 5", yearClass: "year-y5", defaultDegree: "mast", defaultCat: "major", allowSummerToggle: true, baseSems: ['Fall', 'Spring'] }
     ];
 
-    let store = JSON.parse(localStorage.getItem('major_tracker_data_amp_v2') || '{}');
+    let store = JSON.parse(localStorage.getItem('major_tracker_data_amp_v4') || '{}');
     let collapsedState = JSON.parse(localStorage.getItem('major_tracker_collapsed') || '{}');
+    let summerState = JSON.parse(localStorage.getItem('major_tracker_summer') || '{}');
 
     window.onload = function() {
       renderPlan();
@@ -506,12 +590,26 @@
       }
     }
 
+    function toggleSummer(yearId, e) {
+      if (e) e.stopPropagation();
+      summerState[yearId] = !summerState[yearId];
+      localStorage.setItem('major_tracker_summer', JSON.stringify(summerState));
+      renderPlan();
+      recalculate();
+    }
+
     function renderPlan() {
       const container = document.getElementById('planContainer');
       container.innerHTML = '';
 
       defaultBlocks.forEach(y => {
         const isCollapsed = !!collapsedState[y.id];
+        const hasSummer = !!summerState[y.id];
+
+        const activeSems = [...y.baseSems];
+        if (y.allowSummerToggle && hasSummer) {
+          activeSems.push('Summer');
+        }
 
         const yearBlock = document.createElement('div');
         yearBlock.id = `block_${y.id}`;
@@ -530,14 +628,18 @@
         `;
         yearBlock.appendChild(header);
 
+        const yearBody = document.createElement('div');
+        yearBody.className = 'year-body';
+
         const semGrid = document.createElement('div');
         semGrid.className = 'semesters-grid';
 
-        y.sems.forEach(semName => {
+        activeSems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           let semStyle = 'sem-hs';
           if (semName === 'Fall') semStyle = 'sem-fall';
           if (semName === 'Spring') semStyle = 'sem-spring';
+          if (semName === 'Summer') semStyle = 'sem-summer';
 
           const semBox = document.createElement('div');
           semBox.className = `sem-box ${semStyle}`;
@@ -554,22 +656,71 @@
           semGrid.appendChild(semBox);
         });
 
-        yearBlock.appendChild(semGrid);
+        // Standalone Plus / X button positioned in line with semester headers
+        if (y.allowSummerToggle) {
+          const btnSlot = document.createElement('div');
+          btnSlot.className = 'summer-btn-slot';
+          btnSlot.innerHTML = `
+            <button class="btn-summer-plus ${hasSummer ? 'active-x' : ''}" onclick="toggleSummer('${y.id}', event)" title="${hasSummer ? 'Remove Summer Semester' : 'Add Summer Semester'}">
+              ${hasSummer ? '✕' : '+'}
+            </button>
+          `;
+          semGrid.appendChild(btnSlot);
+        }
+
+        yearBody.appendChild(semGrid);
+        yearBlock.appendChild(yearBody);
         container.appendChild(yearBlock);
 
         // Populate saved courses or initial row
-        y.sems.forEach(semName => {
+        activeSems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const savedCourses = store[semKey] || [];
           if (savedCourses.length === 0 && !store.initialized) {
-            addCourse(semKey, '', 3, false, y.defaultDegree, y.defaultCat);
+            if (semName !== 'Summer') {
+              addCourse(semKey, '', 3, false, y.defaultDegree, y.defaultCat);
+            }
           } else {
             savedCourses.forEach(c => addCourse(semKey, c.name, c.credits, c.done, c.degree || y.defaultDegree, c.category || y.defaultCat));
           }
+
+          initDragContainer(semKey);
         });
       });
 
       store.initialized = true;
+    }
+
+    function initDragContainer(semKey) {
+      const list = document.getElementById(`list_${semKey}`);
+      if (!list) return;
+
+      list.addEventListener('dragover', e => {
+        e.preventDefault();
+        const dragging = document.querySelector('.dragging');
+        if (!dragging) return;
+
+        const afterElement = getDragAfterElement(list, e.clientY);
+        if (afterElement == null) {
+          list.appendChild(dragging);
+        } else {
+          list.insertBefore(dragging, afterElement);
+        }
+      });
+    }
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll('.course-row:not(.dragging)')];
+
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     function addCourse(semKey, name = '', credits = 3, done = false, degree = 'bach', category = 'core') {
@@ -578,8 +729,10 @@
 
       const row = document.createElement('div');
       row.className = 'course-row';
+      row.draggable = true;
 
       row.innerHTML = `
+        <span class="drag-handle" title="Drag to reorder">⋮⋮</span>
         <input type="checkbox" class="course-chk" ${done ? 'checked' : ''} onchange="recalculate()">
         <input type="text" class="course-name" placeholder="Course" value="${name}" oninput="recalculate()">
         <input type="number" class="course-credits" min="0" value="${credits}" oninput="recalculate()">
@@ -596,6 +749,15 @@
         </select>
         <button class="btn-del" onclick="removeCourse(this)">✕</button>
       `;
+
+      row.addEventListener('dragstart', () => {
+        row.classList.add('dragging');
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        recalculate();
+      });
 
       list.appendChild(row);
       recalculate();
@@ -625,7 +787,11 @@
         let yearBachEarned = 0;
         let yearMastEarned = 0;
 
-        y.sems.forEach(semName => {
+        const hasSummer = !!summerState[y.id];
+        const activeSems = [...y.baseSems];
+        if (y.allowSummerToggle && hasSummer) activeSems.push('Summer');
+
+        activeSems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const list = document.getElementById(`list_${semKey}`);
           if (!list) return;
@@ -663,7 +829,7 @@
           if (semTotalSpan) semTotalSpan.innerText = semTotal + ' cr earned';
         });
 
-        // Update Year Total Summary Badge
+        // Summary Badge
         const yearBadge = document.getElementById(`badge_year_${y.id}`);
         if (yearBadge) {
           if (yearBachEarned > 0 && yearMastEarned > 0) {
@@ -676,7 +842,7 @@
         }
       });
 
-      localStorage.setItem('major_tracker_data_amp_v2', JSON.stringify(newStore));
+      localStorage.setItem('major_tracker_data_amp_v4', JSON.stringify(newStore));
 
       // Degree Rings
       const bachPercent = Math.min(100, Math.round((bachEarned / BACH_GOAL) * 100));
