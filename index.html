@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMP Major Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: transparent;
+      padding: 12px;
+      color: #37352f;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 920px;
+      background: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    /* Top Rings Row */
+    .rings-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0ee;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ring-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .ring-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+
+    .ring-wrapper {
+      position: relative;
+      width: 92px;
+      height: 92px;
+    }
+
+    .ring-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: #f1f1ef;
+      stroke-width: 8;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 238.76;
+      stroke-dashoffset: 238.76;
+      transition: stroke-dashoffset 0.8s ease-in-out;
+    }
+
+    .ring-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .percent-val {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .sub-val {
+      font-size: 9px;
+      font-weight: 700;
+      margin-top: 3px;
+      white-space: nowrap;
+    }
+
+    .ring-status {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7a7a7a;
+      margin-top: 6px;
+    }
+
+    /* Ring Color Themes */
+    .color-bach .ring-fill { stroke: #8C9AA7; }
+    .color-bach .ring-title, .color-bach .sub-val, .color-bach .percent-val { color: #8C9AA7; }
+
+    .color-mast .ring-fill { stroke: #2c313f; }
+    .color-mast .ring-title, .color-mast .percent-val, .color-mast .sub-val { color: #2c313f; }
+
+    /* Category Progress Section */
+    .categories-box {
+      background: #fafaf9;
+      border: 1px solid #f0f0ee;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .cat-item {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    .cat-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .cat-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #8C9AA7;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background: #f1f1ef;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #8C9AA7;
+      border-radius: 6px;
+      transition: width 0.4s ease-out;
+    }
+
+    /* High School Box */
+    .hs-box {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hs-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #37352f;
+    }
+
+    .hs-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hs-right input {
+      width: 50px;
+      padding: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      text-align: center;
+      outline: none;
+    }
+
+    .select-mini {
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 4px;
+      outline: none;
+      background: #ffffff;
+      color: #37352f;
+    }
+
+    /* Year Blocks - Custom Palette Gradient */
+    .year-block {
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .year-header {
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    /* Year 1: #dbe1e4 */
+    .year-y1 { border-color: #cbd4d9; }
+    .year-y1 .year-header { background: #dbe1e4; color: #3d464d; }
+
+    /* Year 2: #b9c2c8 */
+    .year-y2 { border-color: #a8b3bb; }
+    .year-y2 .year-header { background: #b9c2c8; color: #2e363c; }
+
+    /* Year 3: #8c9aa7 */
+    .year-y3 { border-color: #7b8a98; }
+    .year-y3 .year-header { background: #8c9aa7; color: #ffffff; }
+
+    /* Year 4: #656e7e */
+    .year-y4 { border-color: #545d6c; }
+    .year-y4 .year-header { background: #656e7e; color: #ffffff; }
+
+    /* Year 5: #2c313f */
+    .year-y5 { border-color: #1e222d; }
+    .year-y5 .year-header { background: #2c313f; color: #ffffff; }
+
+    .semesters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 10px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    /* Semester Blocks */
+    .sem-box {
+      border-radius: 6px;
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .sem-box.sem-fall {
+      background: #fafafa;
+      border-left: 3px solid #8c9aa7;
+    }
+
+    .sem-box.sem-spring {
+      background: #f7f9fa;
+      border-left: 3px solid #656e7e;
+    }
+
+    .sem-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sem-fall .sem-label { color: #656e7e; }
+    .sem-spring .sem-label { color: #2c313f; }
+
+    /* Course Rows */
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .course-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      padding: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+
+    .course-chk {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      accent-color: #8C9AA7;
+    }
+
+    .course-name {
+      flex: 1;
+      min-width: 90px;
+      border: none;
+      outline: none;
+      font-size: 11px;
+      font-weight: 600;
+      color: #37352f;
+      background: transparent;
+    }
+
+    .course-credits {
+      width: 30px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .select-degree, .select-cat {
+      font-size: 9.5px;
+      font-weight: 600;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 2px;
+      background: #ffffff;
+      color: #37352f;
+      outline: none;
+    }
+
+    .btn-del {
+      background: none;
+      border: none;
+      color: #a0a0a0;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0 2px;
+    }
+
+    .btn-del:hover {
+      color: #ef4444;
+    }
+
+    .btn-add {
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 4px;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    /* Remove Spin Arrows */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Rings Row -->
+    <div class="rings-row">
+      <!-- Bachelor's Ring -->
+      <div class="ring-box color-bach">
+        <div class="ring-title">Bachelor's</div>
+        <div class="ring-wrapper">
+          <svg class="ring-svg" viewBox="0 0 92 92">
+            <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
+            <circle class="ring-fill" id="bachRing" cx="46" cy="46" r="38"></circle>
+          </svg>
+          <div class="ring-center-text">
+            <span class="percent-val" id="bachPercent">0%</span>
+            <span class="sub-val" id="bachEarned">0 / 128 cr</span>
+          </div>
+        </div>
+        <div class="ring-status" id="bachSub">128 cr remaining</div>
+      </div>
+
+      <!-- Master's Ring -->
+      <div class="ring-box color-mast">
+        <div class="ring-title">Master's</div>
+        <div class="ring-wrapper">
+          <svg class="ring-svg" viewBox="0 0 92 92">
+            <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
+            <circle class="ring-fill" id="mastRing" cx="46" cy="46" r="38"></circle>
+          </svg>
+          <div class="ring-center-text">
+            <span class="percent-val" id="mastPercent">0%</span>
+            <span class="sub-val" id="mastEarned">0 / 30 cr</span>
+          </div>
+        </div>
+        <div class="ring-status" id="mastSub">30 cr remaining</div>
+      </div>
+    </div>
+
+    <!-- Requirements Progress Bars -->
+    <div class="categories-box">
+      <div class="cat-grid">
+        <div class="cat-item">
+          <div class="cat-item-header">
+            <span>Core</span>
+            <span class="cat-badge" id="badge-core">0 / 30 cr</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="bar-core"></div></div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-item-header">
+            <span>Major</span>
+            <span class="cat-badge" id="badge-major">0 / 48 cr</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="bar-major"></div></div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-item-header">
+            <span>Directed Electives</span>
+            <span class="cat-badge" id="badge-elec">0 / 21 cr</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="bar-elec"></div></div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-item-header">
+            <span>GCCR</span>
+            <span class="cat-badge" id="badge-gccr">0 / 5 cr</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="bar-gccr"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- High School Credits -->
+    <div class="hs-box">
+      <span class="hs-label">High School Credit</span>
+      <div class="hs-right">
+        <input type="number" id="hsCredits" min="0" placeholder="0" oninput="recalculate()">
+        <span style="font-size: 11px; font-weight: 700; color: #7a7a7a;">cr towards</span>
+        <select class="select-mini" id="hsCategory" onchange="recalculate()">
+          <option value="core">Core</option>
+          <option value="major">Major</option>
+          <option value="elec" selected>Elective</option>
+          <option value="gccr">GCCR</option>
+          <option value="none">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Plan Semesters -->
+    <div id="planContainer"></div>
+
+  </div>
+
+  <script>
+    const BACH_GOAL = 128;
+    const MAST_GOAL = 30;
+    const CIRCUMFERENCE = 2 * Math.PI * 38;
+
+    const CAT_GOALS = { core: 30, major: 48, elec: 21, gccr: 5 };
+
+    const defaultYears = [
+      { id: 'y1', name: "Year 1 (Freshman)", yearClass: "year-y1", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
+      { id: 'y2', name: "Year 2 (Sophomore)", yearClass: "year-y2", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
+      { id: 'y3', name: "Year 3 (Junior)", yearClass: "year-y3", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
+      { id: 'y4', name: "Year 4 (Senior)", yearClass: "year-y4", defaultDegree: "bach", sems: ['Fall', 'Spring'] },
+      { id: 'y5', name: "Year 5", yearClass: "year-y5", defaultDegree: "mast", sems: ['Fall', 'Spring'] }
+    ];
+
+    let store = JSON.parse(localStorage.getItem('major_tracker_data_amp') || '{}');
+
+    window.onload = function() {
+      if (store.hsCredits !== undefined) document.getElementById('hsCredits').value = store.hsCredits;
+      if (store.hsCategory !== undefined) document.getElementById('hsCategory').value = store.hsCategory;
+      
+      renderPlan();
+      recalculate();
+    };
+
+    function renderPlan() {
+      const container = document.getElementById('planContainer');
+      container.innerHTML = '';
+
+      defaultYears.forEach(y => {
+        const yearBlock = document.createElement('div');
+        yearBlock.className = `year-block ${y.yearClass}`;
+
+        const header = document.createElement('div');
+        header.className = 'year-header';
+        header.innerText = y.name;
+        yearBlock.appendChild(header);
+
+        const semGrid = document.createElement('div');
+        semGrid.className = 'semesters-grid';
+
+        y.sems.forEach(semName => {
+          const semKey = `${y.id}_${semName}`;
+          const isFall = semName === 'Fall';
+          const semBox = document.createElement('div');
+          semBox.className = `sem-box ${isFall ? 'sem-fall' : 'sem-spring'}`;
+
+          semBox.innerHTML = `
+            <div class="sem-title">
+              <span class="sem-label">${semName}</span>
+              <span id="tot_${semKey}" style="font-size:10px; color:#64748b;">0 cr</span>
+            </div>
+            <div class="course-list" id="list_${semKey}"></div>
+            <button class="btn-add" onclick="addCourse('${semKey}', '', 3, false, '${y.defaultDegree}', 'core')">+ Add Course</button>
+          `;
+
+          semGrid.appendChild(semBox);
+        });
+
+        yearBlock.appendChild(semGrid);
+        container.appendChild(yearBlock);
+
+        // Populate saved courses or initial blank row
+        y.sems.forEach(semName => {
+          const semKey = `${y.id}_${semName}`;
+          const savedCourses = store[semKey] || [];
+          if (savedCourses.length === 0 && !store.initialized) {
+            addCourse(semKey, '', 3, false, y.defaultDegree, 'core');
+          } else {
+            savedCourses.forEach(c => addCourse(semKey, c.name, c.credits, c.done, c.degree || y.defaultDegree, c.category || 'core'));
+          }
+        });
+      });
+
+      store.initialized = true;
+    }
+
+    function addCourse(semKey, name = '', credits = 3, done = false, degree = 'bach', category = 'core') {
+      const list = document.getElementById(`list_${semKey}`);
+      if (!list) return;
+
+      const row = document.createElement('div');
+      row.className = 'course-row';
+
+      row.innerHTML = `
+        <input type="checkbox" class="course-chk" ${done ? 'checked' : ''} onchange="recalculate()">
+        <input type="text" class="course-name" placeholder="Course" value="${name}" oninput="recalculate()">
+        <input type="number" class="course-credits" min="0" value="${credits}" oninput="recalculate()">
+        <select class="select-degree" onchange="recalculate()">
+          <option value="bach" ${degree === 'bach' ? 'selected' : ''}>Bach</option>
+          <option value="mast" ${degree === 'mast' ? 'selected' : ''}>Mast</option>
+        </select>
+        <select class="select-cat" onchange="recalculate()">
+          <option value="core" ${category === 'core' ? 'selected' : ''}>Core</option>
+          <option value="major" ${category === 'major' ? 'selected' : ''}>Major</option>
+          <option value="elec" ${category === 'elec' ? 'selected' : ''}>Elective</option>
+          <option value="gccr" ${category === 'gccr' ? 'selected' : ''}>GCCR</option>
+          <option value="none" ${category === 'none' ? 'selected' : ''}>Other</option>
+        </select>
+        <button class="btn-del" onclick="removeCourse(this)">✕</button>
+      `;
+
+      list.appendChild(row);
+      recalculate();
+    }
+
+    function removeCourse(btn) {
+      btn.closest('.course-row').remove();
+      recalculate();
+    }
+
+    function setRingOffset(ringId, percent) {
+      const ring = document.getElementById(ringId);
+      const capped = Math.min(100, Math.max(0, percent));
+      const offset = CIRCUMFERENCE - (capped / 100) * CIRCUMFERENCE;
+      ring.style.strokeDasharray = CIRCUMFERENCE;
+      ring.style.strokeDashoffset = offset;
+    }
+
+    function recalculate() {
+      const hsVal = parseFloat(document.getElementById('hsCredits').value) || 0;
+      const hsCat = document.getElementById('hsCategory').value;
+
+      let bachEarned = hsVal;
+      let mastEarned = 0;
+
+      const catEarned = {
+        core: hsCat === 'core' ? hsVal : 0,
+        major: hsCat === 'major' ? hsVal : 0,
+        elec: hsCat === 'elec' ? hsVal : 0,
+        gccr: hsCat === 'gccr' ? hsVal : 0
+      };
+
+      const newStore = { hsCredits: hsVal, hsCategory: hsCat, initialized: true };
+
+      defaultYears.forEach(y => {
+        y.sems.forEach(semName => {
+          const semKey = `${y.id}_${semName}`;
+          const list = document.getElementById(`list_${semKey}`);
+          if (!list) return;
+
+          const rows = list.querySelectorAll('.course-row');
+          let semTotal = 0;
+          const courses = [];
+
+          rows.forEach(row => {
+            const chk = row.querySelector('.course-chk').checked;
+            const name = row.querySelector('.course-name').value;
+            const cr = parseFloat(row.querySelector('.course-credits').value) || 0;
+            const deg = row.querySelector('.select-degree').value;
+            const cat = row.querySelector('.select-cat').value;
+
+            courses.push({ name, credits: cr, done: chk, degree: deg, category: cat });
+
+            if (chk) {
+              semTotal += cr;
+              if (deg === 'mast') {
+                mastEarned += cr;
+              } else {
+                bachEarned += cr;
+                if (catEarned[cat] !== undefined) {
+                  catEarned[cat] += cr;
+                }
+              }
+            }
+          });
+
+          newStore[semKey] = courses;
+          const semTotalSpan = document.getElementById(`tot_${semKey}`);
+          if (semTotalSpan) semTotalSpan.innerText = semTotal + ' cr earned';
+        });
+      });
+
+      localStorage.setItem('major_tracker_data_amp', JSON.stringify(newStore));
+
+      // Degree Rings
+      const bachPercent = Math.min(100, Math.round((bachEarned / BACH_GOAL) * 100));
+      const bachRem = Math.max(0, BACH_GOAL - bachEarned);
+      document.getElementById('bachPercent').innerText = bachPercent + '%';
+      document.getElementById('bachEarned').innerText = bachEarned + ' / ' + BACH_GOAL + ' cr';
+      document.getElementById('bachSub').innerText = bachRem + ' cr remaining';
+      setRingOffset('bachRing', bachPercent);
+
+      const mastPercent = Math.min(100, Math.round((mastEarned / MAST_GOAL) * 100));
+      const mastRem = Math.max(0, MAST_GOAL - mastEarned);
+      document.getElementById('mastPercent').innerText = mastPercent + '%';
+      document.getElementById('mastEarned').innerText = mastEarned + ' / ' + MAST_GOAL + ' cr';
+      document.getElementById('mastSub').innerText = mastRem + ' cr remaining';
+      setRingOffset('mastRing', mastPercent);
+
+      // Section Progress Bars
+      Object.keys(CAT_GOALS).forEach(catKey => {
+        const earned = catEarned[catKey] || 0;
+        const goal = CAT_GOALS[catKey];
+        const pct = Math.min(100, Math.round((earned / goal) * 100));
+
+        document.getElementById(`badge-${catKey}`).innerText = `${earned} / ${goal} cr`;
+        document.getElementById(`bar-${catKey}`).style.width = pct + '%';
+      });
+    }
+  </script>
+</body>
+</html>
