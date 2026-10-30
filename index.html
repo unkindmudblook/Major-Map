@@ -168,7 +168,7 @@
       opacity: 0.7;
     }
 
-    /* Completely borderless clean inline edit input */
+    /* Clean inline edit input */
     .inline-edit-input {
       font-size: inherit;
       font-weight: inherit;
@@ -208,7 +208,7 @@
 
     .cat-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 10px;
     }
 
@@ -217,6 +217,13 @@
       border: 1px solid #e0e0e0;
       border-radius: 6px;
       padding: 8px 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .cat-item:hover {
+      border-color: #cbd5e1;
     }
 
     .cat-item-header {
@@ -238,6 +245,7 @@
       width: 55%;
       border-radius: 3px;
       padding: 1px;
+      cursor: text;
     }
 
     .cat-name-input:hover, .cat-name-input:focus {
@@ -252,11 +260,52 @@
       font-size: 10px;
       font-weight: 700;
       color: #8C9AA7;
-      cursor: pointer;
     }
 
     .cat-badge-area:hover {
       opacity: 0.7;
+    }
+
+    /* Category Dropdown Content */
+    .cat-dropdown-body {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #f0f0ee;
+      cursor: default;
+    }
+
+    .cat-item.expanded .cat-dropdown-body {
+      display: block;
+    }
+
+    .cat-course-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    .cat-course-name {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 2px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .cat-course-credits {
+      width: 28px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 2px 1px;
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
     }
 
     .progress-track {
@@ -265,6 +314,7 @@
       background: #f1f1ef;
       border-radius: 6px;
       overflow: hidden;
+      margin-top: 4px;
     }
 
     .progress-fill {
@@ -354,17 +404,26 @@
       display: flex;
       gap: 10px;
       width: 100%;
-      align-items: flex-start;
+      align-items: stretch;
+      flex-wrap: nowrap;
     }
 
-    /* Semester Blocks - Flexible equal width */
+    /* Semester Blocks */
     .sem-box {
-      flex: 1;
+      flex: 1 1 0;
       min-width: 0;
       border-radius: 6px;
       padding: 8px;
       border: 1px solid #e2e8f0;
-      transition: flex 0.2s ease-out;
+      overflow: hidden;
+    }
+
+    .summer-btn-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      padding: 0 2px;
     }
 
     .sem-box.sem-fall {
@@ -399,14 +458,6 @@
       height: 18px;
     }
 
-    .summer-btn-slot {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: 8px;
-    }
-
-    /* Standalone Plus / X Button inline with semester titles */
     .btn-summer-plus {
       width: 20px;
       height: 20px;
@@ -458,13 +509,27 @@
 
     .course-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: #ffffff;
-      padding: 4px;
+      padding: 4px 3px;
       border: 1px solid #e2e8f0;
       border-radius: 4px;
       transition: box-shadow 0.15s ease;
+    }
+    .course-prereq-warning {
+      flex-basis: 100%; margin: 2px 4px 3px 22px; color: #9a5b16;
+      background: #fff8eb; border: 1px solid #f4dfbd; border-radius: 4px;
+      padding: 5px 7px; font-size: 10px; line-height: 1.35;
+    }
+    .cat-course-prereqs {
+      flex: 1 1 100%; min-width: 0; border: 1px solid #e0e0e0;
+      border-radius: 4px; padding: 3px 4px; font-size: 9px; outline: none; margin-top: 2px;
+    }
+    .course-mode-btn {
+      border: 1px solid #e0e0e0; border-radius: 4px; background: #fafaf9;
+      color: #64748b; padding: 3px 5px; font-size: 9px; cursor: pointer; white-space: nowrap;
     }
 
     .course-row.dragging {
@@ -476,9 +541,9 @@
     .drag-handle {
       cursor: grab;
       color: #a0a0a0;
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1;
-      padding: 0 2px;
+      padding: 0 1px;
       user-select: none;
     }
 
@@ -487,44 +552,54 @@
     }
 
     .course-chk {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       cursor: pointer;
       accent-color: #8C9AA7;
     }
 
-    .course-name {
+    .course-name-select, .course-name-input {
       flex: 1;
-      min-width: 60px;
-      border: none;
+      min-width: 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
       outline: none;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       color: #37352f;
-      background: transparent;
+      background: #ffffff;
+      padding: 2px 4px;
     }
 
     .course-credits {
-      width: 28px;
+      width: 30px;
+      flex-shrink: 0;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 2px 1px;
-      font-size: 11px;
+      padding: 2px 0;
+      font-size: 10.5px;
       font-weight: 600;
       text-align: center;
       outline: none;
       background: #ffffff;
     }
 
+    /* Arrowless compact select dropdowns */
     .select-degree, .select-cat {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 600;
+      flex-shrink: 0;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 2px 1px;
+      padding: 2px 4px;
       background: #ffffff;
       color: #37352f;
       outline: none;
+      width: auto;
+      max-width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
     }
 
     .btn-del {
@@ -534,7 +609,8 @@
       cursor: pointer;
       font-size: 11px;
       font-weight: 700;
-      padding: 0 2px;
+      padding: 0 1px;
+      flex-shrink: 0;
     }
 
     .btn-del:hover {
@@ -562,6 +638,10 @@
     @media (max-width: 640px) {
       .semesters-grid {
         flex-direction: column;
+      }
+      .summer-btn-slot {
+        padding: 4px 0;
+        justify-content: flex-start;
       }
     }
 
@@ -642,10 +722,12 @@
 
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v6';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v6';
+    const STORAGE_KEY = 'major_tracker_data_amp_v9';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v9';
     const COLLAPSED_KEY = 'major_tracker_collapsed';
     const SUMMER_KEY = 'major_tracker_summer';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items';
+    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded';
 
     const defaultSettings = {
       majorTitle: 'AMP Major Tracker',
@@ -657,12 +739,12 @@
     };
 
     const defaultBlocks = [
-      { id: 'hs', name: 'High School Credit', yearClass: 'year-hs', defaultDegree: 'bach', defaultCat: 'elec', allowSummerToggle: false, baseSems: ['AP'] },
-      { id: 'y1', name: 'Year 1 (Freshman)', yearClass: 'year-y1', defaultDegree: 'bach', defaultCat: 'core', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
-      { id: 'y2', name: 'Year 2 (Sophomore)', yearClass: 'year-y2', defaultDegree: 'bach', defaultCat: 'core', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
-      { id: 'y3', name: 'Year 3 (Junior)', yearClass: 'year-y3', defaultDegree: 'bach', defaultCat: 'major', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
-      { id: 'y4', name: 'Year 4 (Senior)', yearClass: 'year-y4', defaultDegree: 'bach', defaultCat: 'major', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
-      { id: 'y5', name: 'Year 5', yearClass: 'year-y5', defaultDegree: 'mast', defaultCat: 'major', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] }
+      { id: 'hs', name: 'High School Credit', yearClass: 'year-hs', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: false, baseSems: ['AP'] },
+      { id: 'y1', name: 'Year 1 (Freshman)', yearClass: 'year-y1', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y2', name: 'Year 2 (Sophomore)', yearClass: 'year-y2', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y3', name: 'Year 3 (Junior)', yearClass: 'year-y3', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y4', name: 'Year 4 (Senior)', yearClass: 'year-y4', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
+      { id: 'y5', name: 'Year 5', yearClass: 'year-y5', defaultDegree: 'mast', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] }
     ];
 
     function readJSON(key, fallback) {
@@ -679,6 +761,21 @@
     let settings = readJSON(SETTINGS_KEY, defaultSettings);
     let collapsedState = readJSON(COLLAPSED_KEY, {});
     let summerState = readJSON(SUMMER_KEY, {});
+    let catItemsStore = readJSON(CAT_ITEMS_KEY, { core: [], major: [], elec: [], gccr: [] });
+    let globalCatsExpanded = readJSON(CATS_EXPANDED_KEY, false);
+
+    const measureCanvas = document.createElement('canvas');
+    const measureCtx = measureCanvas.getContext('2d');
+
+    function autoSizeSelect(select) {
+      if (!select || !select.options || select.options.length === 0) return;
+      const selectedOption = select.options[select.selectedIndex] || select.options[0];
+      const text = selectedOption.text || '';
+      
+      measureCtx.font = '600 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      const textWidth = measureCtx.measureText(text).width;
+      select.style.width = Math.ceil(textWidth + 12) + 'px';
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('majorTitleInput').value = settings.majorTitle || defaultSettings.majorTitle;
@@ -706,6 +803,14 @@
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
       } catch (error) {
         console.error('Could not save major tracker settings.', error);
+      }
+    }
+
+    function persistCatItems() {
+      try {
+        localStorage.setItem(CAT_ITEMS_KEY, JSON.stringify(catItemsStore));
+      } catch (error) {
+        console.error('Could not save category checklist items.', error);
       }
     }
 
@@ -814,6 +919,16 @@
       });
     }
 
+    function toggleAllCategories(e) {
+      if (e.target.tagName === 'INPUT' || e.target.closest('.cat-badge-area') || e.target.closest('.cat-dropdown-body')) return;
+      globalCatsExpanded = !globalCatsExpanded;
+      localStorage.setItem(CATS_EXPANDED_KEY, JSON.stringify(globalCatsExpanded));
+      document.querySelectorAll('.cat-item').forEach(item => {
+        if (globalCatsExpanded) item.classList.add('expanded');
+        else item.classList.remove('expanded');
+      });
+    }
+
     function renderCategories() {
       const container = document.getElementById('catGridContainer');
       if (!container) return;
@@ -825,8 +940,12 @@
         const catGoal = settings.catGoals[catKey] ?? defaultSettings.catGoals[catKey];
 
         const item = document.createElement('div');
-        item.className = 'cat-item';
+        item.className = `cat-item ${globalCatsExpanded ? 'expanded' : ''}`;
+        item.id = `cat_item_${catKey}`;
         item.dataset.catKey = catKey;
+        
+        item.addEventListener('click', toggleAllCategories);
+
         item.innerHTML = `
           <div class="cat-item-header">
             <input type="text" class="cat-name-input" value="${catName}">
@@ -835,29 +954,177 @@
             </div>
           </div>
           <div class="progress-track"><div class="progress-fill" id="bar-${catKey}"></div></div>
+          <div class="cat-dropdown-body" id="cat_dropdown_${catKey}">
+            <div id="cat_list_${catKey}" style="margin-bottom: 6px;"></div>
+            <button class="btn-add" type="button" onclick="addCustomCatItem('${catKey}', event)">+ Add Required Course</button>
+          </div>
         `;
 
         item.querySelector('.cat-name-input').addEventListener('input', (e) => {
           settings.catNames[catKey] = e.target.value;
           persistSettings();
           updateCategoryDropdowns();
+          updateAllCourseSelectors();
         });
         container.appendChild(item);
+      });
+      renderCategoryItems();
+    }
+
+    function addCustomCatItem(catKey, event) {
+      if (event) event.stopPropagation();
+      if (!catItemsStore[catKey]) catItemsStore[catKey] = [];
+      catItemsStore[catKey].push({ name: '', credits: 3 });
+      persistCatItems();
+      renderCategoryItems();
+      updateAllCourseSelectors();
+      globalCatsExpanded = true;
+      localStorage.setItem(CATS_EXPANDED_KEY, JSON.stringify(globalCatsExpanded));
+      document.querySelectorAll('.cat-item').forEach(el => el.classList.add('expanded'));
+    }
+
+    function renderCategoryItems() {
+      const keys = ['core', 'major', 'elec', 'gccr'];
+      keys.forEach(catKey => {
+        const listContainer = document.getElementById(`cat_list_${catKey}`);
+        if (!listContainer) return;
+        listContainer.innerHTML = '';
+
+        const items = catItemsStore[catKey] || [];
+        if (items.length === 0) {
+          listContainer.innerHTML = `<div style="font-size:10px; color:#94a3b8; text-align:center; padding:4px;">No courses listed yet</div>`;
+          return;
+        }
+
+        items.forEach((item, index) => {
+          const row = document.createElement('div');
+          row.className = 'cat-course-row';
+          
+          const nameInput = document.createElement('input');
+          nameInput.type = 'text';
+          nameInput.className = 'cat-course-name';
+          nameInput.placeholder = 'Course Name';
+          nameInput.value = item.name;
+          nameInput.addEventListener('input', (e) => {
+            item.name = e.target.value;
+            persistCatItems();
+            updateAllCourseSelectors();
+          });
+
+          const creditsInput = document.createElement('input');
+          creditsInput.type = 'number';
+          creditsInput.min = '0';
+          creditsInput.className = 'cat-course-credits';
+          creditsInput.value = item.credits;
+          creditsInput.addEventListener('input', (e) => {
+            item.credits = Number.parseFloat(e.target.value) || 0;
+            persistCatItems();
+          });
+
+          const prereqInput = document.createElement('input');
+          prereqInput.type = 'text';
+          prereqInput.className = 'cat-course-prereqs';
+          prereqInput.placeholder = 'Prerequisites (exact course names, comma-separated)';
+          prereqInput.title = 'Enter the exact names of required courses. Separate multiple prerequisites with commas.';
+          prereqInput.value = Array.isArray(item.prereqs) ? item.prereqs.join(', ') : (item.prereqs || '');
+          prereqInput.addEventListener('input', (e) => {
+            item.prereqs = e.target.value;
+            persistCatItems();
+            refreshAllPrereqWarnings();
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-del';
+          delBtn.type = 'button';
+          delBtn.textContent = '✕';
+          delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            items.splice(index, 1);
+            persistCatItems();
+            renderCategoryItems();
+            updateAllCourseSelectors();
+          });
+
+          row.append(nameInput, creditsInput, delBtn, prereqInput);
+          listContainer.appendChild(row);
+        });
       });
     }
 
     function updateCategoryDropdowns() {
       document.querySelectorAll('.select-cat').forEach(select => {
         const currentVal = select.value;
-        select.innerHTML = '';
-        ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
-          const opt = document.createElement('option');
-          opt.value = key;
-          opt.textContent = key === 'none' ? 'Other' : (settings.catNames[key] || key);
-          opt.selected = currentVal === key;
-          select.appendChild(opt);
-        });
+        populateCategoryOptions(select, currentVal);
+        autoSizeSelect(select);
       });
+    }
+
+    function populateCategoryOptions(select, selectedValue) {
+      select.innerHTML = '';
+      ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+
+        let fullLabel = key === 'none' ? 'Other' : (settings.catNames[key] || key);
+        let displayLabel = fullLabel;
+
+        if (key === 'elec' && fullLabel === 'Directed Electives') {
+          displayLabel = 'Electives';
+        }
+
+        opt.textContent = (selectedValue === key) ? displayLabel : fullLabel;
+        opt.selected = selectedValue === key;
+        select.appendChild(opt);
+      });
+    }
+
+    function updateAllCourseSelectors() {
+      document.querySelectorAll('.course-name-select').forEach(sel => {
+        const currentVal = getCourseControlName(sel);
+        const row = sel.closest('.course-row');
+        const cat = row?.querySelector('.select-cat');
+        populateCourseSelectorOptions(sel, currentVal, cat ? cat.value : 'none');
+      });
+    }
+
+    function populateCourseSelectorOptions(selectEl, selectedName, defaultCatKey) {
+      if (!selectEl) return;
+      selectEl.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select';
+      placeholder.disabled = false;
+      placeholder.selected = !selectedName;
+      selectEl.appendChild(placeholder);
+
+      let foundSelected = false;
+      ['core', 'major', 'elec', 'gccr'].forEach(catKey => {
+        const items = catItemsStore[catKey] || [];
+        if (!items.length) return;
+        const group = document.createElement('optgroup');
+        group.label = settings.catNames[catKey] || catKey;
+        items.forEach(item => {
+          if (!item.name) return;
+          const opt = document.createElement('option');
+          opt.value = JSON.stringify({ name: item.name, credits: item.credits, category: catKey });
+          opt.textContent = item.name;
+          if (String(item.name).trim().toLowerCase() === String(selectedName || '').trim().toLowerCase()) {
+            opt.selected = true;
+            foundSelected = true;
+          }
+          group.appendChild(opt);
+        });
+        selectEl.appendChild(group);
+      });
+
+      const customOpt = document.createElement('option');
+      customOpt.value = '__custom__';
+      customOpt.textContent = '＋ Type a custom class...';
+      selectEl.appendChild(customOpt);
+      if (!foundSelected && !selectedName) {
+        placeholder.selected = true;
+        selectEl.value = '';
+      }
     }
 
     function toggleYear(yearId) {
@@ -879,13 +1146,19 @@
         const courses = [];
         list.querySelectorAll('.course-row').forEach(row => {
           const chk = row.querySelector('.course-chk');
-          const name = row.querySelector('.course-name');
+          const nameInput = row.querySelector('.course-name-select, .course-name-input');
           const credits = row.querySelector('.course-credits');
           const degree = row.querySelector('.select-degree');
           const category = row.querySelector('.select-cat');
-          if (!chk || !name || !credits || !degree || !category) return;
+          if (!chk || !nameInput || !credits || !degree || !category) return;
+          
+          let nameVal = nameInput.value;
+          if (nameInput.tagName === 'SELECT' && nameVal && nameVal !== '__custom__') {
+            try { nameVal = JSON.parse(nameVal).name; } catch (e) {}
+          } else if (nameInput.tagName === 'SELECT' && nameVal === '__custom__') { nameVal = ''; }
+
           courses.push({
-            name: name.value,
+            name: nameVal,
             credits: Number.parseFloat(credits.value) || 0,
             done: chk.checked,
             degree: degree.value,
@@ -1034,7 +1307,14 @@
       }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    function addCourse(semKey, name = '', credits = 3, done = false, degree = 'bach', category = 'core', shouldRecalculate = true) {
+    function getCourseControlName(control) {
+      if (!control) return '';
+      if (control.tagName !== 'SELECT') return control.value;
+      if (control.value === '__custom__') return '';
+      try { return JSON.parse(control.value).name || ''; } catch (e) { return ''; }
+    }
+
+    function addCourse(semKey, name = '', credits = 3, done = false, degree = 'bach', category = 'none', shouldRecalculate = true) {
       const list = document.getElementById(`list_${semKey}`);
       if (!list) return;
       const row = document.createElement('div');
@@ -1050,14 +1330,56 @@
       checkbox.type = 'checkbox';
       checkbox.className = 'course-chk';
       checkbox.checked = !!done;
-      checkbox.addEventListener('change', recalculate);
+      checkbox.addEventListener('change', () => {
+        recalculate();
+        refreshAllPrereqWarnings();
+      });
 
-      const courseName = document.createElement('input');
-      courseName.type = 'text';
-      courseName.className = 'course-name';
-      courseName.placeholder = 'Course';
-      courseName.value = name;
-      courseName.addEventListener('input', recalculate);
+      const isCustomInitial = (name && name !== '__custom__' && !isExistingCategoryItem(name));
+      let nameControl;
+      if (isCustomInitial) {
+        nameControl = document.createElement('input');
+        nameControl.type = 'text';
+        nameControl.className = 'course-name-input';
+        nameControl.placeholder = 'Type custom class name...';
+        nameControl.value = name;
+        nameControl.addEventListener('input', () => { recalculate(); refreshAllPrereqWarnings(); });
+      } else {
+        nameControl = document.createElement('select');
+        nameControl.className = 'course-name-select';
+        populateCourseSelectorOptions(nameControl, name, category);
+      }
+      const modeButton = document.createElement('button');
+      modeButton.type = 'button';
+      modeButton.className = 'course-mode-btn';
+      modeButton.textContent = isCustomInitial ? 'Select class' : 'Type custom';
+      modeButton.title = isCustomInitial ? 'Switch back to the class list' : 'Type a custom class name';
+      modeButton.addEventListener('click', () => {
+        if (nameControl.classList.contains('course-name-select')) {
+          const customInput = document.createElement('input');
+          customInput.type = 'text';
+          customInput.className = 'course-name-input';
+          customInput.placeholder = 'Type custom class name...';
+          customInput.value = '';
+          customInput.addEventListener('input', () => { recalculate(); refreshAllPrereqWarnings(); });
+          nameControl.replaceWith(customInput);
+          nameControl = customInput;
+          modeButton.textContent = 'Select class';
+          modeButton.title = 'Switch to the class list';
+          customInput.focus();
+        } else {
+          const select = document.createElement('select');
+          select.className = 'course-name-select';
+          populateCourseSelectorOptions(select, '', categorySelect.value);
+          select.addEventListener('change', handleCourseSelection);
+          nameControl.replaceWith(select);
+          nameControl = select;
+          modeButton.textContent = 'Type custom';
+          modeButton.title = 'Type a custom class name';
+        }
+        recalculate();
+        refreshAllPrereqWarnings();
+      });
 
       const courseCredits = document.createElement('input');
       courseCredits.type = 'number';
@@ -1075,18 +1397,55 @@
         option.selected = degree === value;
         degreeSelect.appendChild(option);
       });
-      degreeSelect.addEventListener('change', recalculate);
+      degreeSelect.addEventListener('change', () => {
+        autoSizeSelect(degreeSelect);
+        recalculate();
+      });
 
       const categorySelect = document.createElement('select');
       categorySelect.className = 'select-cat';
-      ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = key === 'none' ? 'Other' : (settings.catNames[key] || key);
-        option.selected = category === key;
-        categorySelect.appendChild(option);
+      populateCategoryOptions(categorySelect, category);
+      
+      categorySelect.addEventListener('change', () => {
+        populateCategoryOptions(categorySelect, categorySelect.value);
+        autoSizeSelect(categorySelect);
+        if (nameControl.classList.contains('course-name-select')) {
+          const selectedName = getCourseControlName(nameControl);
+          populateCourseSelectorOptions(nameControl, selectedName, categorySelect.value);
+        }
+        recalculate();
       });
-      categorySelect.addEventListener('change', recalculate);
+
+      function handleCourseSelection() {
+        if (nameControl.value === '__custom__') {
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.className = 'course-name-input';
+          input.placeholder = 'Type custom class name...';
+          input.value = '';
+          input.addEventListener('input', () => { recalculate(); refreshAllPrereqWarnings(); });
+          nameControl.replaceWith(input);
+          nameControl = input;
+          modeButton.textContent = 'Select class';
+          modeButton.title = 'Switch to the class list';
+          input.focus();
+        } else if (nameControl.value) {
+          try {
+            const selected = JSON.parse(nameControl.value);
+            courseCredits.value = selected.credits;
+            categorySelect.value = selected.category;
+            populateCategoryOptions(categorySelect, selected.category);
+            autoSizeSelect(categorySelect);
+          } catch (e) {}
+        }
+        recalculate();
+        refreshAllPrereqWarnings();
+      }
+      if (nameControl.tagName === 'SELECT') nameControl.addEventListener('change', handleCourseSelection);
+
+      const prereqWarning = document.createElement('div');
+      prereqWarning.className = 'course-prereq-warning';
+      prereqWarning.style.display = 'none';
 
       const deleteButton = document.createElement('button');
       deleteButton.className = 'btn-del';
@@ -1095,14 +1454,85 @@
       deleteButton.title = 'Remove course';
       deleteButton.addEventListener('click', () => removeCourse(deleteButton));
 
-      row.append(dragHandle, checkbox, courseName, courseCredits, degreeSelect, categorySelect, deleteButton);
+      row.append(dragHandle, checkbox, nameControl, modeButton, courseCredits, degreeSelect, categorySelect, deleteButton, prereqWarning);
       row.addEventListener('dragstart', () => row.classList.add('dragging'));
       row.addEventListener('dragend', () => {
         row.classList.remove('dragging');
         recalculate();
+        refreshAllPrereqWarnings();
       });
       list.appendChild(row);
+      autoSizeSelect(degreeSelect);
+      autoSizeSelect(categorySelect);
+      refreshAllPrereqWarnings();
+
       if (shouldRecalculate) recalculate();
+    }
+
+    function isExistingCategoryItem(name) {
+      for (let catKey of ['core', 'major', 'elec', 'gccr']) {
+        const items = catItemsStore[catKey] || [];
+        if (items.some(item => item.name === name)) return true;
+      }
+      return false;
+    }
+
+    function findRequiredCourse(name) {
+      const target = String(name || '').trim().toLowerCase();
+      if (!target) return null;
+      for (const catKey of ['core', 'major', 'elec', 'gccr']) {
+        const found = (catItemsStore[catKey] || []).find(item =>
+          String(item.name || '').trim().toLowerCase() === target
+        );
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function getSemesterOrder(row) {
+      const list = row && row.closest('.course-list');
+      const id = list ? list.id.replace(/^list_/, '') : '';
+      if (id === 'hs_AP') return 0;
+      const match = id.match(/^y([1-5])_(Fall|Spring|Summer)$/);
+      if (!match) return Number.MAX_SAFE_INTEGER;
+      const year = Number(match[1]);
+      const semOrder = { Fall: 0, Spring: 1, Summer: 2 }[match[2]];
+      return 1 + (year - 1) * 3 + semOrder;
+    }
+
+    function getMissingPrerequisites(courseName, currentRow) {
+      const requirement = findRequiredCourse(courseName);
+      if (!requirement || !currentRow) return [];
+      const raw = Array.isArray(requirement.prereqs) ? requirement.prereqs.join(',') : String(requirement.prereqs || '');
+      const prereqs = raw.split(/[,;\n]+/).map(value => value.trim()).filter(Boolean);
+      const currentOrder = getSemesterOrder(currentRow);
+      const plannedEarlier = new Set();
+
+      document.querySelectorAll('.course-row').forEach(row => {
+        if (row === currentRow) return;
+        const control = row.querySelector('.course-name-select, .course-name-input');
+        if (!control || getSemesterOrder(row) >= currentOrder) return;
+        const value = getCourseControlName(control).trim().toLowerCase();
+        if (value) plannedEarlier.add(value);
+      });
+
+      return prereqs.filter(prereq => !plannedEarlier.has(prereq.toLowerCase()));
+    }
+
+    function refreshAllPrereqWarnings() {
+      document.querySelectorAll('.course-row').forEach(row => {
+        const control = row.querySelector('.course-name-select, .course-name-input');
+        const warning = row.querySelector('.course-prereq-warning');
+        if (!control || !warning) return;
+        const missing = getMissingPrerequisites(getCourseControlName(control), row);
+        if (missing.length) {
+          warning.textContent = `Prerequisite placement issue: add ${missing.join(', ')} in an earlier semester. A prerequisite cannot be in the same semester or a later semester.`;
+          warning.style.display = 'block';
+        } else {
+          warning.textContent = '';
+          warning.style.display = 'none';
+        }
+      });
     }
 
     function removeCourse(button) {
