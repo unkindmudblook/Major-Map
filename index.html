@@ -29,6 +29,33 @@
       padding: 12px;
     }
 
+    /* Major Header Input */
+    .major-header-box {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0ee;
+    }
+
+    .major-title-input {
+      font-size: 18px;
+      font-weight: 800;
+      color: #2c313f;
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: center;
+      outline: none;
+      width: 100%;
+      border-radius: 6px;
+      padding: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .major-title-input:hover, .major-title-input:focus {
+      border-color: #e2e8f0;
+      background: #fafaf9;
+    }
+
     /* Top Rings Row */
     .rings-row {
       display: flex;
@@ -47,13 +74,43 @@
       align-items: center;
       text-align: center;
       min-width: 150px;
+      position: relative;
+    }
+
+    .ring-title-area {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
     .ring-title {
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.3px;
-      margin-bottom: 6px;
+    }
+
+    .btn-toggle-ring {
+      background: none;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+
+    .btn-toggle-ring:hover {
+      background: #f1f5f9;
+      color: #ef4444;
+      border-color: #fca5a5;
     }
 
     .ring-wrapper {
@@ -104,6 +161,26 @@
       font-weight: 700;
       margin-top: 3px;
       white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .sub-val:hover {
+      opacity: 0.7;
+    }
+
+    /* Completely borderless clean inline edit input */
+    .inline-edit-input {
+      font-size: inherit;
+      font-weight: inherit;
+      font-family: inherit;
+      color: inherit;
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      width: 28px;
+      padding: 0;
+      margin: 0;
     }
 
     .ring-status {
@@ -151,10 +228,35 @@
       font-weight: 700;
     }
 
-    .cat-badge {
+    .cat-name-input {
+      font-size: 11px;
+      font-weight: 700;
+      color: #37352f;
+      border: 1px solid transparent;
+      background: transparent;
+      outline: none;
+      width: 55%;
+      border-radius: 3px;
+      padding: 1px;
+    }
+
+    .cat-name-input:hover, .cat-name-input:focus {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .cat-badge-area {
+      display: flex;
+      align-items: center;
+      gap: 2px;
       font-size: 10px;
       font-weight: 700;
       color: #8C9AA7;
+      cursor: pointer;
+    }
+
+    .cat-badge-area:hover {
+      opacity: 0.7;
     }
 
     .progress-track {
@@ -275,7 +377,6 @@
       border-left: 3px solid #656e7e;
     }
 
-    /* Darker shade of Spring for Summer */
     .sem-box.sem-summer {
       background: #edf1f4;
       border-left: 3px solid #3d4653;
@@ -458,14 +559,12 @@
       color: #334155;
     }
 
-    /* Responsive adjustment for small Notion embeds */
     @media (max-width: 640px) {
       .semesters-grid {
         flex-direction: column;
       }
     }
 
-    /* Remove Spin Arrows */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
@@ -475,11 +574,18 @@
 
   <div class="container">
 
+    <!-- Major Header Title -->
+    <div class="major-header-box">
+      <input type="text" id="majorTitleInput" class="major-title-input" placeholder="Enter Your Major / Program Name" value="AMP Major Tracker">
+    </div>
+
     <!-- Rings Row -->
-    <div class="rings-row">
+    <div class="rings-row" id="ringsRowContainer">
       <!-- Bachelor's Ring -->
       <div class="ring-box color-bach">
-        <div class="ring-title">Bachelor's</div>
+        <div class="ring-title-area">
+          <div class="ring-title">Bachelor's</div>
+        </div>
         <div class="ring-wrapper">
           <svg class="ring-svg" viewBox="0 0 92 92">
             <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
@@ -487,15 +593,20 @@
           </svg>
           <div class="ring-center-text">
             <span class="percent-val" id="bachPercent">0%</span>
-            <span class="sub-val" id="bachEarned">0 / 128 cr</span>
+            <span class="sub-val" id="bachSubValText" onclick="makeEditable('bachGoal', this, 128)">
+              <span id="bachEarnedNum">0</span> / <span id="bachGoalDisplay">128</span> cr
+            </span>
           </div>
         </div>
         <div class="ring-status" id="bachSub">128 cr remaining</div>
       </div>
 
-      <!-- Master's Ring -->
-      <div class="ring-box color-mast">
-        <div class="ring-title">Master's</div>
+      <!-- Master's Ring Slot (Toggleable) -->
+      <div class="ring-box color-mast" id="mastRingBox">
+        <div class="ring-title-area">
+          <div class="ring-title">Master's</div>
+          <button class="btn-toggle-ring" onclick="toggleMastersRing(false)" title="Remove Master's Ring">✕</button>
+        </div>
         <div class="ring-wrapper">
           <svg class="ring-svg" viewBox="0 0 92 92">
             <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
@@ -503,44 +614,24 @@
           </svg>
           <div class="ring-center-text">
             <span class="percent-val" id="mastPercent">0%</span>
-            <span class="sub-val" id="mastEarned">0 / 30 cr</span>
+            <span class="sub-val" id="mastSubValText" onclick="makeEditable('mastGoal', this, 30)">
+              <span id="mastEarnedNum">0</span> / <span id="mastGoalDisplay">30</span> cr
+            </span>
           </div>
         </div>
         <div class="ring-status" id="mastSub">30 cr remaining</div>
       </div>
     </div>
 
+    <!-- Add Master's Button (Shown when ring is hidden) -->
+    <div id="addMastBtnSlot" style="text-align: center; margin-bottom: 16px; display: none;">
+      <button class="btn-add" style="max-width: 200px; margin: 0 auto;" onclick="toggleMastersRing(true)">+ Add Master's Degree</button>
+    </div>
+
     <!-- Requirements Progress Bars -->
     <div class="categories-box">
-      <div class="cat-grid">
-        <div class="cat-item">
-          <div class="cat-item-header">
-            <span>Core</span>
-            <span class="cat-badge" id="badge-core">0 / 30 cr</span>
-          </div>
-          <div class="progress-track"><div class="progress-fill" id="bar-core"></div></div>
-        </div>
-        <div class="cat-item">
-          <div class="cat-item-header">
-            <span>Major</span>
-            <span class="cat-badge" id="badge-major">0 / 48 cr</span>
-          </div>
-          <div class="progress-track"><div class="progress-fill" id="bar-major"></div></div>
-        </div>
-        <div class="cat-item">
-          <div class="cat-item-header">
-            <span>Directed Electives</span>
-            <span class="cat-badge" id="badge-elec">0 / 21 cr</span>
-          </div>
-          <div class="progress-track"><div class="progress-fill" id="bar-elec"></div></div>
-        </div>
-        <div class="cat-item">
-          <div class="cat-item-header">
-            <span>GCCR</span>
-            <span class="cat-badge" id="badge-gccr">0 / 5 cr</span>
-          </div>
-          <div class="progress-track"><div class="progress-fill" id="bar-gccr"></div></div>
-        </div>
+      <div class="cat-grid" id="catGridContainer">
+        <!-- Dynamically rendered category items -->
       </div>
     </div>
 
@@ -550,14 +641,20 @@
   </div>
 
   <script>
-    const BACH_GOAL = 128;
-    const MAST_GOAL = 30;
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v4';
+    const STORAGE_KEY = 'major_tracker_data_amp_v6';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v6';
     const COLLAPSED_KEY = 'major_tracker_collapsed';
     const SUMMER_KEY = 'major_tracker_summer';
 
-    const CAT_GOALS = { core: 30, major: 48, elec: 21, gccr: 5 };
+    const defaultSettings = {
+      majorTitle: 'AMP Major Tracker',
+      bachGoal: 128,
+      mastGoal: 30,
+      showMasters: true,
+      catGoals: { core: 30, major: 48, elec: 21, gccr: 5 },
+      catNames: { core: 'Core', major: 'Major', elec: 'Directed Electives', gccr: 'GCCR' }
+    };
 
     const defaultBlocks = [
       { id: 'hs', name: 'High School Credit', yearClass: 'year-hs', defaultDegree: 'bach', defaultCat: 'elec', allowSummerToggle: false, baseSems: ['AP'] },
@@ -579,10 +676,19 @@
     }
 
     let store = readJSON(STORAGE_KEY, {});
+    let settings = readJSON(SETTINGS_KEY, defaultSettings);
     let collapsedState = readJSON(COLLAPSED_KEY, {});
     let summerState = readJSON(SUMMER_KEY, {});
 
     window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('majorTitleInput').value = settings.majorTitle || defaultSettings.majorTitle;
+      document.getElementById('majorTitleInput').addEventListener('input', () => {
+        settings.majorTitle = document.getElementById('majorTitleInput').value;
+        persistSettings();
+      });
+
+      updateMastersVisibilityUI();
+      renderCategories();
       renderPlan();
       recalculate();
     });
@@ -595,6 +701,165 @@
       }
     }
 
+    function persistSettings() {
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      } catch (error) {
+        console.error('Could not save major tracker settings.', error);
+      }
+    }
+
+    function toggleMastersRing(show) {
+      settings.showMasters = show;
+      persistSettings();
+      updateMastersVisibilityUI();
+      recalculate();
+    }
+
+    function updateMastersVisibilityUI() {
+      const box = document.getElementById('mastRingBox');
+      const addBtn = document.getElementById('addMastBtnSlot');
+      if (settings.showMasters) {
+        box.style.display = 'flex';
+        addBtn.style.display = 'none';
+      } else {
+        box.style.display = 'none';
+        addBtn.style.display = 'block';
+      }
+    }
+
+    function makeEditable(settingKey, containerEl, fallbackVal) {
+      if (containerEl.querySelector('input')) return;
+      const currentVal = settings[settingKey] ?? fallbackVal;
+      
+      const isBach = settingKey === 'bachGoal';
+      const earnedId = isBach ? 'bachEarnedNum' : 'mastEarnedNum';
+      const earnedVal = document.getElementById(earnedId)?.textContent || '0';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '1';
+      input.className = 'inline-edit-input';
+      input.value = currentVal;
+
+      containerEl.innerHTML = '';
+      containerEl.appendChild(document.createTextNode(`${earnedVal} / `));
+      containerEl.appendChild(input);
+      containerEl.appendChild(document.createTextNode(' cr'));
+      
+      input.focus();
+      input.select();
+
+      const save = () => {
+        const newVal = Number.parseFloat(input.value) || fallbackVal;
+        settings[settingKey] = newVal;
+        persistSettings();
+        recalculate();
+      };
+
+      let isSaved = false;
+      const triggerSave = () => {
+        if (isSaved) return;
+        isSaved = true;
+        save();
+      };
+
+      input.addEventListener('blur', triggerSave);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          input.blur();
+        }
+      });
+    }
+
+    function makeCategoryEditable(catKey, containerEl, fallbackVal) {
+      if (containerEl.querySelector('input')) return;
+      const currentVal = settings.catGoals[catKey] ?? fallbackVal;
+      const earnedId = `earned-badge-${catKey}`;
+      const earnedVal = document.getElementById(earnedId)?.textContent || '0';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0';
+      input.className = 'inline-edit-input';
+      input.value = currentVal;
+
+      containerEl.innerHTML = '';
+      containerEl.appendChild(document.createTextNode(`${earnedVal} / `));
+      containerEl.appendChild(input);
+      containerEl.appendChild(document.createTextNode(' cr'));
+
+      input.focus();
+      input.select();
+
+      const save = () => {
+        const newVal = Number.parseFloat(input.value) || 0;
+        settings.catGoals[catKey] = newVal;
+        persistSettings();
+        recalculate();
+      };
+
+      let isSaved = false;
+      const triggerSave = () => {
+        if (isSaved) return;
+        isSaved = true;
+        save();
+      };
+
+      input.addEventListener('blur', triggerSave);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          input.blur();
+        }
+      });
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('catGridContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const keys = ['core', 'major', 'elec', 'gccr'];
+      keys.forEach(catKey => {
+        const catName = settings.catNames[catKey] || defaultSettings.catNames[catKey];
+        const catGoal = settings.catGoals[catKey] ?? defaultSettings.catGoals[catKey];
+
+        const item = document.createElement('div');
+        item.className = 'cat-item';
+        item.dataset.catKey = catKey;
+        item.innerHTML = `
+          <div class="cat-item-header">
+            <input type="text" class="cat-name-input" value="${catName}">
+            <div class="cat-badge-area" id="cat_badge_area_${catKey}" onclick="makeCategoryEditable('${catKey}', this, ${catGoal})">
+              <span id="earned-badge-${catKey}">0</span> / <span id="goal-badge-${catKey}">${catGoal}</span> cr
+            </div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="bar-${catKey}"></div></div>
+        `;
+
+        item.querySelector('.cat-name-input').addEventListener('input', (e) => {
+          settings.catNames[catKey] = e.target.value;
+          persistSettings();
+          updateCategoryDropdowns();
+        });
+        container.appendChild(item);
+      });
+    }
+
+    function updateCategoryDropdowns() {
+      document.querySelectorAll('.select-cat').forEach(select => {
+        const currentVal = select.value;
+        select.innerHTML = '';
+        ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
+          const opt = document.createElement('option');
+          opt.value = key;
+          opt.textContent = key === 'none' ? 'Other' : (settings.catNames[key] || key);
+          opt.selected = currentVal === key;
+          select.appendChild(opt);
+        });
+      });
+    }
+
     function toggleYear(yearId) {
       collapsedState[yearId] = !collapsedState[yearId];
       localStorage.setItem(COLLAPSED_KEY, JSON.stringify(collapsedState));
@@ -605,8 +870,6 @@
       if (icon) icon.innerText = collapsedState[yearId] ? '►' : '▼';
     }
 
-    // Save only semester lists that currently exist in the DOM. Keep all other
-    // stored semesters intact, including Summer when it is temporarily hidden.
     function saveToStorage() {
       store = (store && typeof store === 'object') ? store : {};
       store.initialized = true;
@@ -637,7 +900,6 @@
 
     function toggleSummer(yearId, event) {
       if (event) event.stopPropagation();
-      // Snapshot current inputs before changing the layout.
       saveToStorage();
       summerState[yearId] = !summerState[yearId];
       localStorage.setItem(SUMMER_KEY, JSON.stringify(summerState));
@@ -724,8 +986,6 @@
         yearBlock.appendChild(yearBody);
         container.appendChild(yearBlock);
 
-        // Populate each semester without recalculating while the page is only
-        // partially rendered. This prevents later blocks from being overwritten.
         activeSems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const savedCourses = store[semKey];
@@ -819,11 +1079,11 @@
 
       const categorySelect = document.createElement('select');
       categorySelect.className = 'select-cat';
-      [['core', 'Core'], ['major', 'Major'], ['elec', 'Elective'], ['gccr', 'GCCR'], ['none', 'Other']].forEach(([value, label]) => {
+      ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
         const option = document.createElement('option');
-        option.value = value;
-        option.textContent = label;
-        option.selected = category === value;
+        option.value = key;
+        option.textContent = key === 'none' ? 'Other' : (settings.catNames[key] || key);
+        option.selected = category === key;
         categorySelect.appendChild(option);
       });
       categorySelect.addEventListener('change', recalculate);
@@ -860,8 +1120,6 @@
     }
 
     function recalculate() {
-      // Capture the current page once, after rendering is complete or after a
-      // user edit. saveToStorage preserves semester keys not currently visible.
       saveToStorage();
       let bachEarned = 0;
       let mastEarned = 0;
@@ -897,32 +1155,54 @@
 
         const yearBadge = document.getElementById(`badge_year_${y.id}`);
         if (yearBadge) {
-          if (yearBachEarned > 0 && yearMastEarned > 0) yearBadge.textContent = `${yearBachEarned} Bach / ${yearMastEarned} Mast cr`;
-          else if (yearMastEarned > 0) yearBadge.textContent = `${yearMastEarned} Mast cr contributed`;
+          if (yearBachEarned > 0 && yearMastEarned > 0 && settings.showMasters) yearBadge.textContent = `${yearBachEarned} Bach / ${yearMastEarned} Mast cr`;
+          else if (yearMastEarned > 0 && settings.showMasters) yearBadge.textContent = `${yearMastEarned} Mast cr contributed`;
           else yearBadge.textContent = `${yearBachEarned} cr contributed`;
         }
       });
 
-      const bachPercent = Math.min(100, Math.round((bachEarned / BACH_GOAL) * 100));
-      const bachRem = Math.max(0, BACH_GOAL - bachEarned);
+      const bachGoal = settings.bachGoal || 128;
+      const mastGoal = settings.mastGoal || 30;
+
+      const bachPercent = Math.min(100, Math.round((bachEarned / bachGoal) * 100));
+      const bachRem = Math.max(0, bachGoal - bachEarned);
       document.getElementById('bachPercent').textContent = `${bachPercent}%`;
-      document.getElementById('bachEarned').textContent = `${bachEarned} / ${BACH_GOAL} cr`;
+      
+      const bachEarnedEl = document.getElementById('bachEarnedNum');
+      if (bachEarnedEl) bachEarnedEl.textContent = bachEarned;
+      
+      const bachGoalEl = document.getElementById('bachGoalDisplay');
+      if (bachGoalEl) bachGoalEl.textContent = bachGoal;
+      
       document.getElementById('bachSub').textContent = `${bachRem} cr remaining`;
       setRingOffset('bachRing', bachPercent);
 
-      const mastPercent = Math.min(100, Math.round((mastEarned / MAST_GOAL) * 100));
-      const mastRem = Math.max(0, MAST_GOAL - mastEarned);
-      document.getElementById('mastPercent').textContent = `${mastPercent}%`;
-      document.getElementById('mastEarned').textContent = `${mastEarned} / ${MAST_GOAL} cr`;
-      document.getElementById('mastSub').textContent = `${mastRem} cr remaining`;
-      setRingOffset('mastRing', mastPercent);
+      if (settings.showMasters) {
+        const mastPercent = Math.min(100, Math.round((mastEarned / mastGoal) * 100));
+        const mastRem = Math.max(0, mastGoal - mastEarned);
+        document.getElementById('mastPercent').textContent = `${mastPercent}%`;
+        
+        const mastEarnedEl = document.getElementById('mastEarnedNum');
+        if (mastEarnedEl) mastEarnedEl.textContent = mastEarned;
+        
+        const mastGoalEl = document.getElementById('mastGoalDisplay');
+        if (mastGoalEl) mastGoalEl.textContent = mastGoal;
+        
+        document.getElementById('mastSub').textContent = `${mastRem} cr remaining`;
+        setRingOffset('mastRing', mastPercent);
+      }
 
-      Object.keys(CAT_GOALS).forEach(catKey => {
+      ['core', 'major', 'elec', 'gccr'].forEach(catKey => {
         const earned = catEarned[catKey] || 0;
-        const goal = CAT_GOALS[catKey];
-        const pct = Math.min(100, Math.round((earned / goal) * 100));
-        document.getElementById(`badge-${catKey}`).textContent = `${earned} / ${goal} cr`;
-        document.getElementById(`bar-${catKey}`).style.width = `${pct}%`;
+        const goal = settings.catGoals[catKey] || 0;
+        const pct = goal > 0 ? Math.min(100, Math.round((earned / goal) * 100)) : 0;
+        
+        const badgeEl = document.getElementById(`earned-badge-${catKey}`);
+        const goalEl = document.getElementById(`goal-badge-${catKey}`);
+        const barEl = document.getElementById(`bar-${catKey}`);
+        if (badgeEl) badgeEl.textContent = earned;
+        if (goalEl) goalEl.textContent = goal;
+        if (barEl) barEl.style.width = `${pct}%`;
       });
     }
   </script>
