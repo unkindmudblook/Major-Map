@@ -527,10 +527,6 @@
       flex: 1 1 100%; min-width: 0; border: 1px solid #e0e0e0;
       border-radius: 4px; padding: 3px 4px; font-size: 9px; outline: none; margin-top: 2px;
     }
-    .course-mode-btn {
-      border: 1px solid #e0e0e0; border-radius: 4px; background: #fafaf9;
-      color: #64748b; padding: 3px 5px; font-size: 9px; cursor: pointer; white-space: nowrap;
-    }
 
     .course-row.dragging {
       opacity: 0.4;
@@ -1119,11 +1115,17 @@
 
       const customOpt = document.createElement('option');
       customOpt.value = '__custom__';
-      customOpt.textContent = '＋ Type a custom class...';
+      customOpt.textContent = 'Type Custom';
       selectEl.appendChild(customOpt);
-      if (!foundSelected && !selectedName) {
-        placeholder.selected = true;
-        selectEl.value = '';
+
+      if (!foundSelected && selectedName) {
+        // If it's a custom text value not found in categories
+        const customOptSelected = document.createElement('option');
+        customOptSelected.value = JSON.stringify({ name: selectedName, credits: 3, category: defaultCatKey });
+        customOptSelected.textContent = selectedName;
+        customOptSelected.selected = true;
+        // Insert before customOpt
+        selectEl.insertBefore(customOptSelected, customOpt);
       }
     }
 
@@ -1155,7 +1157,9 @@
           let nameVal = nameInput.value;
           if (nameInput.tagName === 'SELECT' && nameVal && nameVal !== '__custom__') {
             try { nameVal = JSON.parse(nameVal).name; } catch (e) {}
-          } else if (nameInput.tagName === 'SELECT' && nameVal === '__custom__') { nameVal = ''; }
+          } else if (nameInput.tagName === 'SELECT' && nameVal === '__custom__') {
+            nameVal = '';
+          }
 
           courses.push({
             name: nameVal,
@@ -1349,37 +1353,6 @@
         nameControl.className = 'course-name-select';
         populateCourseSelectorOptions(nameControl, name, category);
       }
-      const modeButton = document.createElement('button');
-      modeButton.type = 'button';
-      modeButton.className = 'course-mode-btn';
-      modeButton.textContent = isCustomInitial ? 'Select class' : 'Type custom';
-      modeButton.title = isCustomInitial ? 'Switch back to the class list' : 'Type a custom class name';
-      modeButton.addEventListener('click', () => {
-        if (nameControl.classList.contains('course-name-select')) {
-          const customInput = document.createElement('input');
-          customInput.type = 'text';
-          customInput.className = 'course-name-input';
-          customInput.placeholder = 'Type custom class name...';
-          customInput.value = '';
-          customInput.addEventListener('input', () => { recalculate(); refreshAllPrereqWarnings(); });
-          nameControl.replaceWith(customInput);
-          nameControl = customInput;
-          modeButton.textContent = 'Select class';
-          modeButton.title = 'Switch to the class list';
-          customInput.focus();
-        } else {
-          const select = document.createElement('select');
-          select.className = 'course-name-select';
-          populateCourseSelectorOptions(select, '', categorySelect.value);
-          select.addEventListener('change', handleCourseSelection);
-          nameControl.replaceWith(select);
-          nameControl = select;
-          modeButton.textContent = 'Type custom';
-          modeButton.title = 'Type a custom class name';
-        }
-        recalculate();
-        refreshAllPrereqWarnings();
-      });
 
       const courseCredits = document.createElement('input');
       courseCredits.type = 'number';
@@ -1426,8 +1399,6 @@
           input.addEventListener('input', () => { recalculate(); refreshAllPrereqWarnings(); });
           nameControl.replaceWith(input);
           nameControl = input;
-          modeButton.textContent = 'Select class';
-          modeButton.title = 'Switch to the class list';
           input.focus();
         } else if (nameControl.value) {
           try {
@@ -1454,7 +1425,7 @@
       deleteButton.title = 'Remove course';
       deleteButton.addEventListener('click', () => removeCourse(deleteButton));
 
-      row.append(dragHandle, checkbox, nameControl, modeButton, courseCredits, degreeSelect, categorySelect, deleteButton, prereqWarning);
+      row.append(dragHandle, checkbox, nameControl, courseCredits, degreeSelect, categorySelect, deleteButton, prereqWarning);
       row.addEventListener('dragstart', () => row.classList.add('dragging'));
       row.addEventListener('dragend', () => {
         row.classList.remove('dragging');
