@@ -1168,7 +1168,7 @@
           const prereqInput = document.createElement('input');
           prereqInput.type = 'text';
           prereqInput.className = 'cat-course-prereqs';
-          prereqInput.placeholder = 'Prerequisites (exact names, comma-separated)';
+          prereqInput.placeholder = 'Prerequisites';
           prereqInput.value = Array.isArray(item.prereqs) ? item.prereqs.join(', ') : (item.prereqs || '');
           prereqInput.addEventListener('input', (e) => {
             item.prereqs = e.target.value;
@@ -1181,7 +1181,7 @@
           
           const termsLabel = document.createElement('span');
           termsLabel.className = 'cat-terms-label';
-          termsLabel.textContent = 'Offered:';
+          termsLabel.textContent = '';
           termsContainer.appendChild(termsLabel);
 
           if (!Array.isArray(item.terms)) {
