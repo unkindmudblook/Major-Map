@@ -306,6 +306,11 @@
       box-sizing: border-box;
     }
 
+    .cat-course-row.completed-cat-row {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
     .cat-course-top-line {
       display: flex;
       align-items: center;
@@ -418,6 +423,37 @@
     .cat-term-checkbox-label input {
       margin: 0 1px 0 0;
       cursor: pointer;
+    }
+
+    /* Inner Category Completed Collapsible */
+    .cat-completed-accordion {
+      margin-top: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .cat-completed-accordion-header {
+      padding: 4px 6px;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #475569;
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cat-completed-accordion-body {
+      padding: 6px;
+      display: block;
+    }
+
+    .cat-completed-accordion.collapsed .cat-completed-accordion-body {
+      display: none;
     }
 
     .progress-track {
@@ -820,7 +856,7 @@
       <button class="btn-add" style="max-width: 200px; margin: 0 auto;" onclick="toggleMastersRing(true)">+ Add Master's Degree</button>
     </div>
 
-    <!-- Requirements Progress Bars -->
+    <!-- Requirements Progress Bars & Categories -->
     <div class="categories-box">
       <div class="cat-grid" id="catGridContainer">
         <!-- Dynamically rendered category items -->
@@ -834,12 +870,13 @@
 
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v11';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v11';
-    const COLLAPSED_KEY = 'major_tracker_collapsed';
-    const SUMMER_KEY = 'major_tracker_summer';
-    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v11';
-    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded';
+    const STORAGE_KEY = 'major_tracker_data_amp_v13';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v13';
+    const COLLAPSED_KEY = 'major_tracker_collapsed_v13';
+    const SUMMER_KEY = 'major_tracker_summer_v13';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v13';
+    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v13';
+    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v13';
 
     const defaultSettings = {
       majorTitle: 'AMP Major Tracker',
@@ -875,6 +912,7 @@
     let summerState = readJSON(SUMMER_KEY, {});
     let catItemsStore = readJSON(CAT_ITEMS_KEY, { core: [], major: [], elec: [], gccr: [] });
     let globalCatsExpanded = readJSON(CATS_EXPANDED_KEY, false);
+    let catCompletedCollapsed = readJSON(CAT_COMPLETED_COLLAPSED_KEY, {});
 
     const measureCanvas = document.createElement('canvas');
     const measureCtx = measureCanvas.getContext('2d');
@@ -901,6 +939,17 @@
       renderPlan();
       recalculate();
     });
+
+    function toggleCatCompletedAccordion(catKey, event) {
+      if (event) event.stopPropagation();
+      catCompletedCollapsed[catKey] = !catCompletedCollapsed[catKey];
+      localStorage.setItem(CAT_COMPLETED_COLLAPSED_KEY, JSON.stringify(catCompletedCollapsed));
+      
+      const accord = document.getElementById(`cat_completed_accordion_${catKey}`);
+      const icon = document.getElementById(`cat_completed_icon_${catKey}`);
+      if (accord) accord.classList.toggle('collapsed', !!catCompletedCollapsed[catKey]);
+      if (icon) icon.innerText = catCompletedCollapsed[catKey] ? '►' : '▼';
+    }
 
     function persistStore() {
       try {
@@ -1050,6 +1099,7 @@
       keys.forEach(catKey => {
         const catName = settings.catNames[catKey] || defaultSettings.catNames[catKey];
         const catGoal = settings.catGoals[catKey] ?? defaultSettings.catGoals[catKey];
+        const isCompCollapsed = !!catCompletedCollapsed[catKey];
 
         const item = document.createElement('div');
         item.className = `cat-item ${globalCatsExpanded ? 'expanded' : ''}`;
@@ -1069,6 +1119,14 @@
           <div class="cat-dropdown-body" id="cat_dropdown_${catKey}">
             <div id="cat_list_${catKey}" style="margin-bottom: 6px;"></div>
             <button class="btn-add" type="button" onclick="addCustomCatItem('${catKey}', event)">+ Add Required Course</button>
+            
+            <div class="cat-completed-accordion ${isCompCollapsed ? 'collapsed' : ''}" id="cat_completed_accordion_${catKey}" style="display: none;">
+              <div class="cat-completed-accordion-header" onclick="toggleCatCompletedAccordion('${catKey}', event)">
+                <span><span id="cat_completed_icon_${catKey}">${isCompCollapsed ? '►' : '▼'}</span> Completed</span>
+                <span id="cat_completed_count_${catKey}" style="font-weight:700;">0 cr</span>
+              </div>
+              <div class="cat-completed-accordion-body" id="cat_completed_list_${catKey}"></div>
+            </div>
           </div>
         `;
 
@@ -1095,20 +1153,56 @@
       document.querySelectorAll('.cat-item').forEach(el => el.classList.add('expanded'));
     }
 
+    function getCompletedCoursesForCategory(catKey) {
+      const completedList = [];
+      document.querySelectorAll('.course-row').forEach(row => {
+        const chk = row.querySelector('.course-chk');
+        if (!chk || !chk.checked) return;
+        
+        const catSel = row.querySelector('.select-cat');
+        if (!catSel || catSel.value !== catKey) return;
+
+        const nameControl = row.querySelector('.course-name-select, .course-name-input');
+        const nameVal = getCourseControlName(nameControl);
+        const creditsInput = row.querySelector('.course-credits');
+        const creds = Number.parseFloat(creditsInput?.value) || 0;
+
+        if (nameVal) {
+          completedList.push({ name: nameVal, credits: creds });
+        }
+      });
+      return completedList;
+    }
+
     function renderCategoryItems() {
       const keys = ['core', 'major', 'elec', 'gccr'];
       keys.forEach(catKey => {
         const listContainer = document.getElementById(`cat_list_${catKey}`);
+        const completedAccordion = document.getElementById(`cat_completed_accordion_${catKey}`);
+        const completedListContainer = document.getElementById(`cat_completed_list_${catKey}`);
+        const completedCountSpan = document.getElementById(`cat_completed_count_${catKey}`);
+        
         if (!listContainer) return;
         listContainer.innerHTML = '';
+        if (completedListContainer) completedListContainer.innerHTML = '';
 
-        const items = catItemsStore[catKey] || [];
-        if (items.length === 0) {
+        const completedCourses = getCompletedCoursesForCategory(catKey);
+        const completedNamesSet = new Set(completedCourses.map(c => c.name.trim().toLowerCase()));
+
+        // Filter out completed courses from the uncompleted list
+        const items = (catItemsStore[catKey] || []).filter(item => {
+          if (!item.name) return true;
+          return !completedNamesSet.has(item.name.trim().toLowerCase());
+        });
+
+        if (items.length === 0 && completedCourses.length === 0) {
           listContainer.innerHTML = `<div style="font-size:10px; color:#94a3b8; text-align:center; padding:4px;">No courses listed yet</div>`;
-          return;
+        } else if (items.length === 0) {
+          listContainer.innerHTML = `<div style="font-size:10px; color:#10b981; text-align:center; padding:4px; font-weight:600;">All required courses completed!</div>`;
         }
 
-        items.forEach((item, index) => {
+        items.forEach((item) => {
+          const originalIndex = catItemsStore[catKey].indexOf(item);
           const row = document.createElement('div');
           row.className = 'cat-course-row';
           
@@ -1148,7 +1242,7 @@
           delBtn.textContent = '✕';
           delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            items.splice(index, 1);
+            if (originalIndex !== -1) catItemsStore[catKey].splice(originalIndex, 1);
             persistCatItems();
             renderCategoryItems();
             updateAllCourseSelectors();
@@ -1178,11 +1272,6 @@
 
           const termsContainer = document.createElement('div');
           termsContainer.className = 'cat-terms-container';
-          
-          const termsLabel = document.createElement('span');
-          termsLabel.className = 'cat-terms-label';
-          termsLabel.textContent = '';
-          termsContainer.appendChild(termsLabel);
 
           if (!Array.isArray(item.terms)) {
             item.terms = ['Fall', 'Spring'];
@@ -1213,6 +1302,44 @@
           row.append(topSubRow, detailsPanel);
           listContainer.appendChild(row);
         });
+
+        // Render Completed Courses inside Category Dropdown
+        if (completedCourses.length > 0) {
+          if (completedAccordion) completedAccordion.style.display = 'block';
+          let catCompCredsTotal = 0;
+
+          completedCourses.forEach(comp => {
+            catCompCredsTotal += comp.credits;
+            const row = document.createElement('div');
+            row.className = 'cat-course-row completed-cat-row';
+            row.style.marginBottom = '4px';
+
+            const topSubRow = document.createElement('div');
+            topSubRow.className = 'cat-course-top-line';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'cat-course-name';
+            nameSpan.style.border = 'none';
+            nameSpan.style.background = 'transparent';
+            nameSpan.style.color = '#334155';
+            nameSpan.textContent = `✓ ${comp.name}`;
+
+            const credSpan = document.createElement('span');
+            credSpan.className = 'cat-course-credits';
+            credSpan.style.border = 'none';
+            credSpan.style.background = 'transparent';
+            credSpan.style.color = '#64748b';
+            credSpan.textContent = `${comp.credits} cr`;
+
+            topSubRow.append(nameSpan, credSpan);
+            row.appendChild(topSubRow);
+            if (completedListContainer) completedListContainer.appendChild(row);
+          });
+
+          if (completedCountSpan) completedCountSpan.textContent = `${catCompCredsTotal} cr`;
+        } else {
+          if (completedAccordion) completedAccordion.style.display = 'none';
+        }
       });
     }
 
@@ -1808,6 +1935,7 @@
         if (barEl) barEl.style.width = `${pct}%`;
       });
 
+      renderCategoryItems();
       refreshAllCourseValidations();
     }
   </script>
