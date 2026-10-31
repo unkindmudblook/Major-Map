@@ -870,13 +870,13 @@
 
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v14';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v14';
-    const COLLAPSED_KEY = 'major_tracker_collapsed_v14';
-    const SUMMER_KEY = 'major_tracker_summer_v14';
-    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v14';
-    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v14';
-    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v14';
+    const STORAGE_KEY = 'major_tracker_data_amp_v16';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v16';
+    const COLLAPSED_KEY = 'major_tracker_collapsed_v16';
+    const SUMMER_KEY = 'major_tracker_summer_v16';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v16';
+    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v16';
+    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v16';
 
     const defaultSettings = {
       majorTitle: 'AMP Major Tracker',
@@ -1213,7 +1213,9 @@
           nameInput.className = 'cat-course-name';
           nameInput.placeholder = 'Course Name';
           nameInput.value = item.name;
+          nameInput.addEventListener('click', (e) => e.stopPropagation());
           nameInput.addEventListener('input', (e) => {
+            e.stopPropagation();
             item.name = e.target.value;
             persistCatItems();
             updateAllCourseSelectors();
@@ -1224,7 +1226,9 @@
           creditsInput.min = '0';
           creditsInput.className = 'cat-course-credits';
           creditsInput.value = item.credits;
+          creditsInput.addEventListener('click', (e) => e.stopPropagation());
           creditsInput.addEventListener('input', (e) => {
+            e.stopPropagation();
             item.credits = Number.parseFloat(e.target.value) || 0;
             persistCatItems();
           });
@@ -1234,11 +1238,17 @@
           detailsBtn.type = 'button';
           detailsBtn.textContent = '⚙ Details';
           detailsBtn.title = 'Edit Prerequisites and Offered Terms';
+          
+          detailsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            detailsPanel.classList.toggle('open');
+          });
 
           const delBtn = document.createElement('button');
           delBtn.className = 'btn-del';
           delBtn.type = 'button';
           delBtn.textContent = '✕';
+          delBtn.title = 'Remove course';
           delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (originalIndex !== -1) catItemsStore[catKey].splice(originalIndex, 1);
@@ -1252,11 +1262,7 @@
 
           const detailsPanel = document.createElement('div');
           detailsPanel.className = 'cat-course-details-panel';
-
-          detailsBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            detailsPanel.classList.toggle('open');
-          });
+          detailsPanel.addEventListener('click', (e) => e.stopPropagation());
 
           const prereqInput = document.createElement('input');
           prereqInput.type = 'text';
@@ -1264,13 +1270,12 @@
           prereqInput.placeholder = 'Prerequisites';
           prereqInput.value = Array.isArray(item.prereqs) ? item.prereqs.join(', ') : (item.prereqs || '');
           
-          // PREVENT EVENT BUBBLING SO TYPING DOES NOT CLOSE/TOGGLE ACCORDION
           prereqInput.addEventListener('click', (e) => e.stopPropagation());
           prereqInput.addEventListener('input', (e) => {
             e.stopPropagation();
             item.prereqs = e.target.value;
             persistCatItems();
-            recalculate();
+            refreshAllCourseValidations(); // Replaced recalculate() here
           });
 
           const termsContainer = document.createElement('div');
@@ -1284,6 +1289,7 @@
           ['Fall', 'Spring', 'Summer'].forEach(term => {
             const labelEl = document.createElement('label');
             labelEl.className = 'cat-term-checkbox-label';
+            labelEl.addEventListener('click', (e) => e.stopPropagation());
             
             const chk = document.createElement('input');
             chk.type = 'checkbox';
@@ -1297,7 +1303,7 @@
                 item.terms = item.terms.filter(t => t !== term);
               }
               persistCatItems();
-              recalculate();
+              refreshAllCourseValidations(); // Replaced recalculate() here
             });
 
             labelEl.append(chk, document.createTextNode(term));
