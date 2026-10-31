@@ -27,7 +27,6 @@
       border: none;
       border-radius: 10px;
       padding: 12px;
-      overflow-x: hidden;
     }
 
     /* Major Header Input */
@@ -209,8 +208,20 @@
 
     .cat-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
+    }
+
+    @media (min-width: 820px) {
+      .cat-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .cat-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .cat-item {
@@ -292,15 +303,14 @@
       padding: 6px;
       border-radius: 5px;
       width: 100%;
-      min-width: 0;
+      box-sizing: border-box;
     }
 
-    .cat-course-top-row {
+    .cat-course-top-line {
       display: flex;
       align-items: center;
       gap: 4px;
       width: 100%;
-      min-width: 0;
     }
 
     .cat-course-name {
@@ -329,77 +339,85 @@
     }
 
     .btn-toggle-details {
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
       border-radius: 4px;
-      padding: 3px 5px;
       font-size: 9px;
-      font-weight: 600;
-      color: #64748b;
+      font-weight: 700;
+      color: #475569;
+      padding: 3px 5px;
       cursor: pointer;
       white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.15s ease;
     }
 
     .btn-toggle-details:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-      color: #334155;
+      background: #e2e8f0;
+      color: #1e293b;
     }
 
-    .cat-course-meta-row {
+    .cat-course-details-panel {
       display: none;
       flex-direction: column;
       gap: 4px;
-      width: 100%;
-      min-width: 0;
-      margin-top: 2px;
+      margin-top: 4px;
       padding-top: 4px;
       border-top: 1px dashed #e2e8f0;
+      width: 100%;
     }
 
-    .cat-course-row.details-open .cat-course-meta-row {
+    .cat-course-details-panel.open {
       display: flex;
     }
 
     .cat-course-prereqs {
       width: 100%;
-      min-width: 0;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
       padding: 3px 6px;
       font-size: 9.5px;
       outline: none;
       background: #fff;
+      box-sizing: border-box;
     }
 
     .cat-terms-container {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 9.5px;
+      gap: 4px;
+      font-size: 9px;
       color: #555;
       background: #fff;
       border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 3px 6px;
+      padding: 3px 5px;
       width: 100%;
-      flex-wrap: wrap;
+      box-sizing: border-box;
+      flex-wrap: nowrap;
+      overflow-x: auto;
     }
 
     .cat-terms-label {
       font-weight: 700;
       color: #64748b;
       margin-right: 2px;
+      flex-shrink: 0;
     }
 
     .cat-term-checkbox-label {
       display: inline-flex;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
       cursor: pointer;
       font-weight: 600;
       white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cat-term-checkbox-label input {
+      margin: 0 1px 0 0;
+      cursor: pointer;
     }
 
     .progress-track {
@@ -611,13 +629,11 @@
       border: 1px solid #e2e8f0;
       border-radius: 4px;
       transition: box-shadow 0.15s ease;
-      width: 100%;
-      min-width: 0;
     }
 
     .course-warning {
       flex-basis: 100%;
-      margin: 2px 2px 2px 2px;
+      margin: 2px 4px 3px 22px;
       color: #9a5b16;
       background: #fff8eb;
       border: 1px solid #f4dfbd;
@@ -818,11 +834,11 @@
 
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v10';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v10';
+    const STORAGE_KEY = 'major_tracker_data_amp_v11';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v11';
     const COLLAPSED_KEY = 'major_tracker_collapsed';
     const SUMMER_KEY = 'major_tracker_summer';
-    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v10';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v11';
     const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded';
 
     const defaultSettings = {
@@ -1097,7 +1113,7 @@
           row.className = 'cat-course-row';
           
           const topSubRow = document.createElement('div');
-          topSubRow.className = 'cat-course-top-row';
+          topSubRow.className = 'cat-course-top-line';
 
           const nameInput = document.createElement('input');
           nameInput.type = 'text';
@@ -1120,15 +1136,11 @@
             persistCatItems();
           });
 
-          const toggleDetailsBtn = document.createElement('button');
-          toggleDetailsBtn.className = 'btn-toggle-details';
-          toggleDetailsBtn.type = 'button';
-          toggleDetailsBtn.textContent = '⚙ Details';
-          toggleDetailsBtn.title = 'Configure Prerequisites and Terms Offered';
-          toggleDetailsBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            row.classList.toggle('details-open');
-          });
+          const detailsBtn = document.createElement('button');
+          detailsBtn.className = 'btn-toggle-details';
+          detailsBtn.type = 'button';
+          detailsBtn.textContent = '⚙ Details';
+          detailsBtn.title = 'Edit Prerequisites and Offered Terms';
 
           const delBtn = document.createElement('button');
           delBtn.className = 'btn-del';
@@ -1143,15 +1155,20 @@
             recalculate();
           });
 
-          topSubRow.append(nameInput, creditsInput, toggleDetailsBtn, delBtn);
+          topSubRow.append(nameInput, creditsInput, detailsBtn, delBtn);
 
-          const metaRow = document.createElement('div');
-          metaRow.className = 'cat-course-meta-row';
+          const detailsPanel = document.createElement('div');
+          detailsPanel.className = 'cat-course-details-panel';
+
+          detailsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            detailsPanel.classList.toggle('open');
+          });
 
           const prereqInput = document.createElement('input');
           prereqInput.type = 'text';
           prereqInput.className = 'cat-course-prereqs';
-          prereqInput.placeholder = 'Prerequisites (comma-separated)';
+          prereqInput.placeholder = 'Prerequisites (exact names, comma-separated)';
           prereqInput.value = Array.isArray(item.prereqs) ? item.prereqs.join(', ') : (item.prereqs || '');
           prereqInput.addEventListener('input', (e) => {
             item.prereqs = e.target.value;
@@ -1192,8 +1209,8 @@
             termsContainer.appendChild(labelEl);
           });
 
-          metaRow.append(prereqInput, termsContainer);
-          row.append(topSubRow, metaRow);
+          detailsPanel.append(prereqInput, termsContainer);
+          row.append(topSubRow, detailsPanel);
           listContainer.appendChild(row);
         });
       });
@@ -1509,10 +1526,6 @@
       courseCredits.className = 'course-credits';
       courseCredits.value = credits;
       courseCredits.addEventListener('input', recalculate);
-      courseCredits.addEventListener('blur', recalculate);
-      courseCredits.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') courseCredits.blur();
-      });
 
       const degreeSelect = document.createElement('select');
       degreeSelect.className = 'select-degree';
