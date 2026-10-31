@@ -870,13 +870,13 @@
 
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v13';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v13';
-    const COLLAPSED_KEY = 'major_tracker_collapsed_v13';
-    const SUMMER_KEY = 'major_tracker_summer_v13';
-    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v13';
-    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v13';
-    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v13';
+    const STORAGE_KEY = 'major_tracker_data_amp_v14';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v14';
+    const COLLAPSED_KEY = 'major_tracker_collapsed_v14';
+    const SUMMER_KEY = 'major_tracker_summer_v14';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v14';
+    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v14';
+    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v14';
 
     const defaultSettings = {
       majorTitle: 'AMP Major Tracker',
@@ -1189,7 +1189,6 @@
         const completedCourses = getCompletedCoursesForCategory(catKey);
         const completedNamesSet = new Set(completedCourses.map(c => c.name.trim().toLowerCase()));
 
-        // Filter out completed courses from the uncompleted list
         const items = (catItemsStore[catKey] || []).filter(item => {
           if (!item.name) return true;
           return !completedNamesSet.has(item.name.trim().toLowerCase());
@@ -1264,7 +1263,11 @@
           prereqInput.className = 'cat-course-prereqs';
           prereqInput.placeholder = 'Prerequisites';
           prereqInput.value = Array.isArray(item.prereqs) ? item.prereqs.join(', ') : (item.prereqs || '');
+          
+          // PREVENT EVENT BUBBLING SO TYPING DOES NOT CLOSE/TOGGLE ACCORDION
+          prereqInput.addEventListener('click', (e) => e.stopPropagation());
           prereqInput.addEventListener('input', (e) => {
+            e.stopPropagation();
             item.prereqs = e.target.value;
             persistCatItems();
             recalculate();
@@ -1272,6 +1275,7 @@
 
           const termsContainer = document.createElement('div');
           termsContainer.className = 'cat-terms-container';
+          termsContainer.addEventListener('click', (e) => e.stopPropagation());
 
           if (!Array.isArray(item.terms)) {
             item.terms = ['Fall', 'Spring'];
@@ -1284,7 +1288,9 @@
             const chk = document.createElement('input');
             chk.type = 'checkbox';
             chk.checked = item.terms.includes(term);
-            chk.addEventListener('change', () => {
+            chk.addEventListener('click', (e) => e.stopPropagation());
+            chk.addEventListener('change', (e) => {
+              e.stopPropagation();
               if (chk.checked) {
                 if (!item.terms.includes(term)) item.terms.push(term);
               } else {
