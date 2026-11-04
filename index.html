@@ -27,14 +27,20 @@
       border: none;
       border-radius: 10px;
       padding: 12px;
+      position: relative;
     }
 
-    /* Major Header Input */
+    /* Major Header Input & Settings Button */
     .major-header-box {
       text-align: center;
       margin-bottom: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid #f0f0ee;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
     .major-title-input {
@@ -46,6 +52,7 @@
       text-align: center;
       outline: none;
       width: 100%;
+      max-width: 600px;
       border-radius: 6px;
       padding: 4px;
       transition: all 0.15s ease;
@@ -56,16 +63,37 @@
       background: #fafaf9;
     }
 
+    .settings-btn-top {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .settings-btn-top:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+
     /* Top Rings Row */
     .rings-row {
       display: flex;
-      justify-content: space-around;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 24px;
       padding-bottom: 16px;
       border-bottom: 1px solid #f0f0ee;
       margin-bottom: 16px;
-      flex-wrap: wrap;
     }
 
     .ring-box {
@@ -73,50 +101,68 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      min-width: 150px;
+      min-width: 130px;
       position: relative;
+    }
+
+    /* Cluster for Bachelor's and vertically stacked minor rings */
+    .bach-cluster {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Vertical stack for minor rings to keep them aligned */
+    .minors-vertical-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-box.ring-small {
+      min-width: 90px;
+    }
+
+    .ring-box.ring-small .ring-wrapper {
+      width: 68px;
+      height: 68px;
+    }
+
+    .ring-box.ring-small .percent-val {
+      font-size: 14px;
     }
 
     .ring-title-area {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      height: 22px;
     }
 
     .ring-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.3px;
     }
 
-    .btn-toggle-ring {
-      background: none;
-      border: 1px solid #cbd5e1;
-      border-radius: 3px;
-      width: 16px;
-      height: 16px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #64748b;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      transition: all 0.15s ease;
-    }
-
-    .btn-toggle-ring:hover {
-      background: #f1f5f9;
-      color: #ef4444;
-      border-color: #fca5a5;
+    .ring-subtitle-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
     }
 
     .ring-wrapper {
       position: relative;
-      width: 92px;
-      height: 92px;
+      width: 104px;
+      height: 104px;
     }
 
     .ring-svg {
@@ -138,6 +184,13 @@
       stroke-dasharray: 238.76;
       stroke-dashoffset: 238.76;
       transition: stroke-dashoffset 0.8s ease-in-out;
+    }
+
+    .ring-small .ring-bg, .ring-small .ring-fill {
+      r: 27;
+    }
+    .ring-small .ring-svg {
+      overflow: visible;
     }
 
     .ring-center-text {
@@ -168,7 +221,6 @@
       opacity: 0.7;
     }
 
-    /* Clean inline edit input */
     .inline-edit-input {
       font-size: inherit;
       font-weight: inherit;
@@ -190,14 +242,7 @@
       margin-top: 6px;
     }
 
-    /* Ring Color Themes */
-    .color-bach .ring-fill { stroke: #8C9AA7; }
-    .color-bach .ring-title, .color-bach .sub-val, .color-bach .percent-val { color: #8C9AA7; }
-
-    .color-mast .ring-fill { stroke: #2c313f; }
-    .color-mast .ring-title, .color-mast .percent-val, .color-mast .sub-val { color: #2c313f; }
-
-    /* Category Progress Section */
+    /* Category Progress Section Grid (4-on-3 Stacking) */
     .categories-box {
       background: #fafaf9;
       border: 1px solid #f0f0ee;
@@ -208,17 +253,23 @@
 
     .cat-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
 
-    @media (min-width: 820px) {
+    @media (max-width: 880px) {
       .cat-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 640px) {
+      .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 460px) {
       .cat-grid {
         grid-template-columns: 1fr;
       }
@@ -272,14 +323,12 @@
       gap: 2px;
       font-size: 10px;
       font-weight: 700;
-      color: #8C9AA7;
     }
 
     .cat-badge-area:hover {
       opacity: 0.7;
     }
 
-    /* Category Dropdown Content */
     .cat-dropdown-body {
       display: none;
       margin-top: 8px;
@@ -403,13 +452,6 @@
       overflow-x: auto;
     }
 
-    .cat-terms-label {
-      font-weight: 700;
-      color: #64748b;
-      margin-right: 2px;
-      flex-shrink: 0;
-    }
-
     .cat-term-checkbox-label {
       display: inline-flex;
       align-items: center;
@@ -425,7 +467,6 @@
       cursor: pointer;
     }
 
-    /* Inner Category Completed Collapsible */
     .cat-completed-accordion {
       margin-top: 8px;
       border: 1px solid #e2e8f0;
@@ -468,7 +509,6 @@
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: #8C9AA7;
       border-radius: 6px;
       transition: width 0.4s ease-out;
     }
@@ -514,27 +554,16 @@
       border-radius: 4px;
     }
 
-    /* High School Block Styling */
     .year-hs { border-color: #cbd5e1; }
     .year-hs .year-header { background: #F0F3F4; color: #475569; }
-
-    /* Year 1: #dbe1e4 */
     .year-y1 { border-color: #cbd4d9; }
     .year-y1 .year-header { background: #dbe1e4; color: #3d464d; }
-
-    /* Year 2: #b9c2c8 */
     .year-y2 { border-color: #a8b3bb; }
     .year-y2 .year-header { background: #b9c2c8; color: #2e363c; }
-
-    /* Year 3: #8c9aa7 */
     .year-y3 { border-color: #7b8a98; }
     .year-y3 .year-header { background: #8c9aa7; color: #ffffff; }
-
-    /* Year 4: #656e7e */
     .year-y4 { border-color: #545d6c; }
     .year-y4 .year-header { background: #656e7e; color: #ffffff; }
-
-    /* Year 5: #2c313f */
     .year-y5 { border-color: #1e222d; }
     .year-y5 .year-header { background: #2c313f; color: #ffffff; }
 
@@ -547,7 +576,6 @@
       display: none;
     }
 
-    /* Full Width Flex Grid */
     .semesters-grid {
       display: flex;
       gap: 10px;
@@ -556,7 +584,6 @@
       flex-wrap: nowrap;
     }
 
-    /* Semester Blocks */
     .sem-box {
       flex: 1 1 0;
       min-width: 0;
@@ -574,25 +601,10 @@
       padding: 0 2px;
     }
 
-    .sem-box.sem-fall {
-      background: #fafafa;
-      border-left: 3px solid #8c9aa7;
-    }
-
-    .sem-box.sem-spring {
-      background: #f7f9fa;
-      border-left: 3px solid #656e7e;
-    }
-
-    .sem-box.sem-summer {
-      background: #edf1f4;
-      border-left: 3px solid #3d4653;
-    }
-
-    .sem-box.sem-hs {
-      background: #f8fafc;
-      border-left: 3px solid #64748b;
-    }
+    .sem-box.sem-fall { background: #fafafa; border-left: 3px solid #8c9aa7; }
+    .sem-box.sem-spring { background: #f7f9fa; border-left: 3px solid #656e7e; }
+    .sem-box.sem-summer { background: #edf1f4; border-left: 3px solid #3d4653; }
+    .sem-box.sem-hs { background: #f8fafc; border-left: 3px solid #64748b; }
 
     .sem-title {
       font-size: 11px;
@@ -603,7 +615,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 18px;
+      min-height: 18px;
+    }
+
+    .sem-title-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .underload-tag {
+      background: #fff3ed;
+      color: #c2410c;
+      border: 1px solid #ffedd5;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 3px;
+      text-transform: uppercase;
     }
 
     .btn-summer-plus {
@@ -646,7 +675,6 @@
     .sem-summer .sem-label { color: #232832; }
     .sem-hs .sem-label { color: #475569; }
 
-    /* Course Rows & Warnings */
     .course-list {
       display: flex;
       flex-direction: column;
@@ -732,7 +760,6 @@
       background: #ffffff;
     }
 
-    /* Arrowless compact select dropdowns */
     .select-degree, .select-cat {
       font-size: 9px;
       font-weight: 600;
@@ -783,6 +810,96 @@
       color: #334155;
     }
 
+    /* Modal Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 800;
+      border-bottom: 1px solid #f0f0ee;
+      padding-bottom: 8px;
+    }
+    .modal-close {
+      background: none; border: none; font-size: 14px; cursor: pointer; color: #64748b; font-weight: 700;
+    }
+    .modal-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .modal-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .modal-color-picker-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-color-input {
+      -webkit-appearance: none;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      background: none;
+    }
+    .modal-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+    .modal-color-input::-webkit-color-swatch { border: 1px solid #cbd5e1; border-radius: 50%; }
+
+    .modal-toggle-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #334155;
+    }
+    .modal-toggle-btn.active {
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #fca5a5;
+    }
+
     @media (max-width: 640px) {
       .semesters-grid {
         flex-direction: column;
@@ -790,6 +907,10 @@
       .summer-btn-slot {
         padding: 4px 0;
         justify-content: flex-start;
+      }
+      .bach-cluster {
+        flex-direction: column;
+        align-items: center;
       }
     }
 
@@ -802,38 +923,104 @@
 
   <div class="container">
 
-    <!-- Major Header Title -->
+    <!-- Major Header Title & Settings Modal Trigger -->
     <div class="major-header-box">
       <input type="text" id="majorTitleInput" class="major-title-input" placeholder="Enter Your Major / Program Name" value="AMP Major Tracker">
+      <button class="settings-btn-top" onclick="openSettingsModal()">⚙ Settings</button>
     </div>
 
-    <!-- Rings Row -->
+    <!-- Top Rings Row -->
     <div class="rings-row" id="ringsRowContainer">
-      <!-- Bachelor's Ring -->
-      <div class="ring-box color-bach">
-        <div class="ring-title-area">
-          <div class="ring-title">Bachelor's</div>
+      <!-- Bachelor's Cluster (Bachelor's Ring + vertically stacked minor rings) -->
+      <div class="bach-cluster">
+        <!-- Bachelor's Ring -->
+        <div class="ring-box" id="bachRingBox">
+          <div class="ring-title-area">
+            <div class="ring-title" id="title_bach">Bachelor's</div>
+          </div>
+          <div class="ring-wrapper">
+            <svg class="ring-svg" viewBox="0 0 92 92">
+              <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
+              <circle class="ring-fill" id="bachRing" cx="46" cy="46" r="38"></circle>
+            </svg>
+            <div class="ring-center-text">
+              <span class="percent-val" id="bachPercent">0%</span>
+              <span class="sub-val" id="bachSubValText" onclick="makeEditable('bachGoal', this, 128)">
+                <span id="bachEarnedNum">0</span> / <span id="bachGoalDisplay">128</span> cr
+              </span>
+            </div>
+          </div>
+          <div class="ring-status" id="bachSub">128 cr remaining</div>
+        </div>
+
+        <!-- Vertically Stacked Minor Rings -->
+        <div class="minors-vertical-stack" id="minorsVerticalStack">
+          <!-- Minor 1 Ring Slot -->
+          <div class="ring-box ring-small" id="minor1RingBox" style="display: none;">
+            <div class="ring-title-area" style="margin-bottom: 2px;">
+              <input type="text" class="cat-name-input" id="minor1NameInput" value="Minor 1" style="font-size: 11px; text-align: center; width: 65px;" oninput="updateMinorName(1, this.value)">
+            </div>
+            <div class="ring-wrapper">
+              <svg class="ring-svg" viewBox="0 0 72 72">
+                <circle class="ring-bg" cx="36" cy="36" r="27" style="stroke-width: 6;"></circle>
+                <circle class="ring-fill" id="minor1Ring" cx="36" cy="36" r="27" style="stroke-width: 6; stroke-dasharray: 169.65; stroke-dashoffset: 169.65;"></circle>
+              </svg>
+              <div class="ring-center-text">
+                <span class="percent-val" id="minor1Percent" style="font-size: 13px;">0%</span>
+                <span class="sub-val" id="minor1SubValText" style="font-size: 8px;" onclick="makeEditable('minor1Goal', this, 18)">
+                  <span id="minor1EarnedNum">0</span>/<span id="minor1GoalDisplay">18</span>
+                </span>
+              </div>
+            </div>
+            <div class="ring-subtitle-label">minor</div>
+          </div>
+
+          <!-- Minor 2 Ring Slot -->
+          <div class="ring-box ring-small" id="minor2RingBox" style="display: none;">
+            <div class="ring-title-area" style="margin-bottom: 2px;">
+              <input type="text" class="cat-name-input" id="minor2NameInput" value="Minor 2" style="font-size: 11px; text-align: center; width: 65px;" oninput="updateMinorName(2, this.value)">
+            </div>
+            <div class="ring-wrapper">
+              <svg class="ring-svg" viewBox="0 0 72 72">
+                <circle class="ring-bg" cx="36" cy="36" r="27" style="stroke-width: 6;"></circle>
+                <circle class="ring-fill" id="minor2Ring" cx="36" cy="36" r="27" style="stroke-width: 6; stroke-dasharray: 169.65; stroke-dashoffset: 169.65;"></circle>
+              </svg>
+              <div class="ring-center-text">
+                <span class="percent-val" id="minor2Percent" style="font-size: 13px;">0%</span>
+                <span class="sub-val" id="minor2SubValText" style="font-size: 8px;" onclick="makeEditable('minor2Goal', this, 18)">
+                  <span id="minor2EarnedNum">0</span>/<span id="minor2GoalDisplay">18</span>
+                </span>
+              </div>
+            </div>
+            <div class="ring-subtitle-label">minor</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Ring Slot (Full Size) -->
+      <div class="ring-box" id="certRingBox" style="display: none;">
+        <div class="ring-title-area" style="margin-bottom: 6px;">
+          <input type="text" class="cat-name-input" id="certNameInput" value="Certificate" style="font-size: 13px; text-align: center; width: 85px;" oninput="updateCertName(this.value)">
         </div>
         <div class="ring-wrapper">
           <svg class="ring-svg" viewBox="0 0 92 92">
             <circle class="ring-bg" cx="46" cy="46" r="38"></circle>
-            <circle class="ring-fill" id="bachRing" cx="46" cy="46" r="38"></circle>
+            <circle class="ring-fill" id="certRing" cx="46" cy="46" r="38"></circle>
           </svg>
           <div class="ring-center-text">
-            <span class="percent-val" id="bachPercent">0%</span>
-            <span class="sub-val" id="bachSubValText" onclick="makeEditable('bachGoal', this, 128)">
-              <span id="bachEarnedNum">0</span> / <span id="bachGoalDisplay">128</span> cr
+            <span class="percent-val" id="certPercent">0%</span>
+            <span class="sub-val" id="certSubValText" onclick="makeEditable('certGoal', this, 12)">
+              <span id="certEarnedNum">0</span> / <span id="certGoalDisplay">12</span> cr
             </span>
           </div>
         </div>
-        <div class="ring-status" id="bachSub">128 cr remaining</div>
+        <div class="ring-subtitle-label" style="font-size: 10px; margin-top: 5px;">certificate</div>
       </div>
 
-      <!-- Master's Ring Slot (Toggleable) -->
-      <div class="ring-box color-mast" id="mastRingBox">
+      <!-- Master's Ring Slot -->
+      <div class="ring-box" id="mastRingBox">
         <div class="ring-title-area">
-          <div class="ring-title">Master's</div>
-          <button class="btn-toggle-ring" onclick="toggleMastersRing(false)" title="Remove Master's Ring">✕</button>
+          <div class="ring-title" id="title_mast">Master's</div>
         </div>
         <div class="ring-wrapper">
           <svg class="ring-svg" viewBox="0 0 92 92">
@@ -851,12 +1038,7 @@
       </div>
     </div>
 
-    <!-- Add Master's Button (Shown when ring is hidden) -->
-    <div id="addMastBtnSlot" style="text-align: center; margin-bottom: 16px; display: none;">
-      <button class="btn-add" style="max-width: 200px; margin: 0 auto;" onclick="toggleMastersRing(true)">+ Add Master's Degree</button>
-    </div>
-
-    <!-- Requirements Progress Bars & Categories -->
+    <!-- Requirements Progress Bars & Categories (Side-by-Side 4-on-3 Grid Stacking) -->
     <div class="categories-box">
       <div class="cat-grid" id="catGridContainer">
         <!-- Dynamically rendered category items -->
@@ -868,23 +1050,99 @@
 
   </div>
 
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Tracker Settings & Colors</span>
+        <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+      </div>
+
+      <div>
+        <div class="modal-section-title">Add / Remove Sections & Custom Colors</div>
+        <div class="modal-options-list">
+          <div class="modal-toggle-row">
+            <span>Bachelor's</span>
+            <div class="modal-color-picker-group">
+              <input type="color" class="modal-color-input" id="picker_bach" value="#8C9AA7" onchange="updateRingColor('bach', this.value)">
+            </div>
+          </div>
+          <div class="modal-toggle-row">
+            <span>Minor 1</span>
+            <div class="modal-color-picker-group">
+              <input type="color" class="modal-color-input" id="picker_minor1" value="#64748b" onchange="updateRingColor('minor1', this.value)">
+              <button class="modal-toggle-btn" id="modalToggleMinor1" onclick="toggleMinorRing(1, !settings.showMinor1)">Add</button>
+            </div>
+          </div>
+          <div class="modal-toggle-row">
+            <span>Minor 2</span>
+            <div class="modal-color-picker-group">
+              <input type="color" class="modal-color-input" id="picker_minor2" value="#475569" onchange="updateRingColor('minor2', this.value)">
+              <button class="modal-toggle-btn" id="modalToggleMinor2" onclick="toggleMinorRing(2, !settings.showMinor2)">Add</button>
+            </div>
+          </div>
+          <div class="modal-toggle-row">
+            <span>Certificate</span>
+            <div class="modal-color-picker-group">
+              <input type="color" class="modal-color-input" id="picker_cert" value="#0ea5e9" onchange="updateRingColor('cert', this.value)">
+              <button class="modal-toggle-btn" id="modalToggleCert" onclick="toggleCertRing(!settings.showCert)">Add</button>
+            </div>
+          </div>
+          <div class="modal-toggle-row">
+            <span>Master's Degree</span>
+            <div class="modal-color-picker-group">
+              <input type="color" class="modal-color-input" id="picker_mast" value="#2c313f" onchange="updateRingColor('mast', this.value)">
+              <button class="modal-toggle-btn" id="modalToggleMast" onclick="toggleMastersRing(!settings.showMasters)">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="modal-section-title">Data Backup</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-add" onclick="exportData()">Export JSON</button>
+          <button class="btn-add" onclick="importData()">Import JSON</button>
+          <input type="file" id="importFileInput" style="display: none;" accept=".json" onchange="handleImportFile(event)">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const CIRCUMFERENCE = 2 * Math.PI * 38;
-    const STORAGE_KEY = 'major_tracker_data_amp_v16';
-    const SETTINGS_KEY = 'major_tracker_settings_amp_v16';
-    const COLLAPSED_KEY = 'major_tracker_collapsed_v16';
-    const SUMMER_KEY = 'major_tracker_summer_v16';
-    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v16';
-    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v16';
-    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v16';
+    const SMALL_CIRCUMFERENCE = 2 * Math.PI * 27;
+    const STORAGE_KEY = 'major_tracker_data_amp_v21';
+    const SETTINGS_KEY = 'major_tracker_settings_amp_v21';
+    const COLLAPSED_KEY = 'major_tracker_collapsed_v21';
+    const SUMMER_KEY = 'major_tracker_summer_v21';
+    const CAT_ITEMS_KEY = 'major_tracker_cat_items_v21';
+    const CATS_EXPANDED_KEY = 'major_tracker_cats_expanded_v21';
+    const CAT_COMPLETED_COLLAPSED_KEY = 'major_tracker_cat_completed_collapsed_v21';
 
     const defaultSettings = {
       majorTitle: 'AMP Major Tracker',
       bachGoal: 128,
       mastGoal: 30,
       showMasters: true,
-      catGoals: { core: 30, major: 48, elec: 21, gccr: 5 },
-      catNames: { core: 'Core', major: 'Major', elec: 'Directed Electives', gccr: 'GCCR' }
+      showMinor1: false,
+      minor1Goal: 18,
+      minor1Name: 'Minor 1',
+      showMinor2: false,
+      minor2Goal: 18,
+      minor2Name: 'Minor 2',
+      showCert: false,
+      certGoal: 12,
+      certName: 'Certificate',
+      colors: {
+        bach: '#8C9AA7',
+        minor1: '#64748b',
+        minor2: '#475569',
+        cert: '#0ea5e9',
+        mast: '#2c313f'
+      },
+      catGoals: { core: 30, major: 48, elec: 21, gccr: 5, minor1: 18, minor2: 18, cert: 12, mast: 30 },
+      catNames: { core: 'Core', major: 'Major', elec: 'Directed Electives', gccr: 'GCCR', minor1: 'Minor 1', minor2: 'Minor 2', cert: 'Certificate', mast: 'Master\'s Degree' }
     };
 
     const defaultBlocks = [
@@ -893,7 +1151,7 @@
       { id: 'y2', name: 'Year 2 (Sophomore)', yearClass: 'year-y2', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
       { id: 'y3', name: 'Year 3 (Junior)', yearClass: 'year-y3', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
       { id: 'y4', name: 'Year 4 (Senior)', yearClass: 'year-y4', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] },
-      { id: 'y5', name: 'Year 5', yearClass: 'year-y5', defaultDegree: 'mast', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] }
+      { id: 'y5', name: 'Year 5', yearClass: 'year-y5', defaultDegree: 'bach', defaultCat: 'none', allowSummerToggle: true, baseSems: ['Fall', 'Spring'] }
     ];
 
     function readJSON(key, fallback) {
@@ -907,10 +1165,14 @@
     }
 
     let store = readJSON(STORAGE_KEY, {});
-    let settings = readJSON(SETTINGS_KEY, defaultSettings);
+    let settings = Object.assign({}, defaultSettings, readJSON(SETTINGS_KEY, {}));
+    if (!settings.catGoals) settings.catGoals = Object.assign({}, defaultSettings.catGoals);
+    if (!settings.catNames) settings.catNames = Object.assign({}, defaultSettings.catNames);
+    if (!settings.colors) settings.colors = Object.assign({}, defaultSettings.colors);
+
     let collapsedState = readJSON(COLLAPSED_KEY, {});
     let summerState = readJSON(SUMMER_KEY, {});
-    let catItemsStore = readJSON(CAT_ITEMS_KEY, { core: [], major: [], elec: [], gccr: [] });
+    let catItemsStore = readJSON(CAT_ITEMS_KEY, { core: [], major: [], elec: [], gccr: [], minor1: [], minor2: [], cert: [], mast: [] });
     let globalCatsExpanded = readJSON(CATS_EXPANDED_KEY, false);
     let catCompletedCollapsed = readJSON(CAT_COMPLETED_COLLAPSED_KEY, {});
 
@@ -934,11 +1196,175 @@
         persistSettings();
       });
 
-      updateMastersVisibilityUI();
+      const m1Input = document.getElementById('minor1NameInput');
+      if (m1Input) m1Input.value = settings.minor1Name || 'Minor 1';
+      
+      const m2Input = document.getElementById('minor2NameInput');
+      if (m2Input) m2Input.value = settings.minor2Name || 'Minor 2';
+
+      const certInput = document.getElementById('certNameInput');
+      if (certInput) certInput.value = settings.certName || 'Certificate';
+
+      applyColors();
+      updateRingsVisibilityUI();
       renderCategories();
       renderPlan();
       recalculate();
     });
+
+    function applyColors() {
+      const c = settings.colors;
+      
+      // Bach
+      const bachRing = document.getElementById('bachRing');
+      if (bachRing) bachRing.style.stroke = c.bach;
+      ['title_bach', 'bachPercent', 'bachSubValText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.color = c.bach;
+      });
+
+      // Minor 1
+      const m1Ring = document.getElementById('minor1Ring');
+      if (m1Ring) m1Ring.style.stroke = c.minor1;
+      ['minor1NameInput', 'minor1Percent', 'minor1SubValText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.color = c.minor1;
+      });
+
+      // Minor 2
+      const m2Ring = document.getElementById('minor2Ring');
+      if (m2Ring) m2Ring.style.stroke = c.minor2;
+      ['minor2NameInput', 'minor2Percent', 'minor2SubValText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.color = c.minor2;
+      });
+
+      // Cert
+      const certRing = document.getElementById('certRing');
+      if (certRing) certRing.style.stroke = c.cert;
+      ['certNameInput', 'certPercent', 'certSubValText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.color = c.cert;
+      });
+
+      // Mast
+      const mastRing = document.getElementById('mastRing');
+      if (mastRing) mastRing.style.stroke = c.mast;
+      ['title_mast', 'mastPercent', 'mastSubValText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.color = c.mast;
+      });
+
+      // Category Badges & Bars
+      ['minor1', 'minor2', 'cert', 'mast'].forEach(key => {
+        const bar = document.getElementById(`bar-${key}`);
+        if (bar && c[key]) bar.style.background = c[key];
+        const badge = document.getElementById(`cat_badge_area_${key}`);
+        if (badge && c[key]) badge.style.color = c[key];
+      });
+    }
+
+    function updateRingColor(key, hex) {
+      settings.colors[key] = hex;
+      persistSettings();
+      applyColors();
+    }
+
+    function openSettingsModal() {
+      document.getElementById('settingsModal').style.display = 'flex';
+      
+      // Sync color pickers
+      ['bach', 'minor1', 'minor2', 'cert', 'mast'].forEach(key => {
+        const picker = document.getElementById(`picker_${key}`);
+        if (picker && settings.colors[key]) picker.value = settings.colors[key];
+      });
+
+      updateModalToggleButtons();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').style.display = 'none';
+    }
+
+    function updateModalToggleButtons() {
+      const btnM1 = document.getElementById('modalToggleMinor1');
+      if (btnM1) {
+        btnM1.textContent = settings.showMinor1 ? 'Remove' : 'Add';
+        btnM1.className = `modal-toggle-btn ${settings.showMinor1 ? 'active' : ''}`;
+      }
+      const btnM2 = document.getElementById('modalToggleMinor2');
+      if (btnM2) {
+        btnM2.textContent = settings.showMinor2 ? 'Remove' : 'Add';
+        btnM2.className = `modal-toggle-btn ${settings.showMinor2 ? 'active' : ''}`;
+      }
+      const btnCert = document.getElementById('modalToggleCert');
+      if (btnCert) {
+        btnCert.textContent = settings.showCert ? 'Remove' : 'Add';
+        btnCert.className = `modal-toggle-btn ${settings.showCert ? 'active' : ''}`;
+      }
+      const btnMast = document.getElementById('modalToggleMast');
+      if (btnMast) {
+        btnMast.textContent = settings.showMasters ? 'Remove' : 'Add';
+        btnMast.className = `modal-toggle-btn ${settings.showMasters ? 'active' : ''}`;
+      }
+    }
+
+    function exportData() {
+      const dataToExport = {
+        version: 'v21',
+        store,
+        settings,
+        collapsedState,
+        summerState,
+        catItemsStore
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `${(settings.majorTitle || 'Major_Tracker').replace(/\s+/g, '_')}_Backup.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData() {
+      document.getElementById('importFileInput').click();
+    }
+
+    function handleImportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported.store) store = imported.store;
+          if (imported.settings) settings = Object.assign({}, defaultSettings, imported.settings);
+          if (imported.collapsedState) collapsedState = imported.collapsedState;
+          if (imported.summerState) summerState = imported.summerState;
+          if (imported.catItemsStore) catItemsStore = imported.catItemsStore;
+
+          persistStore();
+          persistSettings();
+          persistCatItems();
+          localStorage.setItem(COLLAPSED_KEY, JSON.stringify(collapsedState));
+          localStorage.setItem(SUMMER_KEY, JSON.stringify(summerState));
+
+          document.getElementById('majorTitleInput').value = settings.majorTitle || defaultSettings.majorTitle;
+          applyColors();
+          updateRingsVisibilityUI();
+          renderCategories();
+          renderPlan();
+          recalculate();
+          closeSettingsModal();
+          alert('Import successful!');
+        } catch (err) {
+          alert('Error importing data. Invalid JSON file format.');
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    }
 
     function toggleCatCompletedAccordion(catKey, event) {
       if (event) event.stopPropagation();
@@ -978,28 +1404,78 @@
     function toggleMastersRing(show) {
       settings.showMasters = show;
       persistSettings();
-      updateMastersVisibilityUI();
+      updateRingsVisibilityUI();
+      renderCategories();
+      updateCategoryDropdowns();
+      updateAllCourseSelectors();
       recalculate();
+      updateModalToggleButtons();
     }
 
-    function updateMastersVisibilityUI() {
-      const box = document.getElementById('mastRingBox');
-      const addBtn = document.getElementById('addMastBtnSlot');
-      if (settings.showMasters) {
-        box.style.display = 'flex';
-        addBtn.style.display = 'none';
-      } else {
-        box.style.display = 'none';
-        addBtn.style.display = 'block';
-      }
+    function toggleMinorRing(minorIndex, show) {
+      if (minorIndex === 1) settings.showMinor1 = show;
+      if (minorIndex === 2) settings.showMinor2 = show;
+      persistSettings();
+      updateRingsVisibilityUI();
+      renderCategories();
+      updateCategoryDropdowns();
+      updateAllCourseSelectors();
+      recalculate();
+      updateModalToggleButtons();
+    }
+
+    function toggleCertRing(show) {
+      settings.showCert = show;
+      persistSettings();
+      updateRingsVisibilityUI();
+      renderCategories();
+      updateCategoryDropdowns();
+      updateAllCourseSelectors();
+      recalculate();
+      updateModalToggleButtons();
+    }
+
+    function updateMinorName(minorIndex, val) {
+      const key = `minor${minorIndex}`;
+      settings[`${key}Name`] = val;
+      settings.catNames[key] = val;
+      persistSettings();
+      renderCategories();
+      updateCategoryDropdowns();
+      updateAllCourseSelectors();
+    }
+
+    function updateCertName(val) {
+      settings.certName = val;
+      settings.catNames.cert = val;
+      persistSettings();
+      renderCategories();
+      updateCategoryDropdowns();
+      updateAllCourseSelectors();
+    }
+
+    function updateRingsVisibilityUI() {
+      const mastBox = document.getElementById('mastRingBox');
+      const minor1Box = document.getElementById('minor1RingBox');
+      const minor2Box = document.getElementById('minor2RingBox');
+      const certBox = document.getElementById('certRingBox');
+
+      minor1Box.style.display = settings.showMinor1 ? 'flex' : 'none';
+      minor2Box.style.display = settings.showMinor2 ? 'flex' : 'none';
+      certBox.style.display = settings.showCert ? 'flex' : 'none';
+      mastBox.style.display = settings.showMasters ? 'flex' : 'none';
     }
 
     function makeEditable(settingKey, containerEl, fallbackVal) {
       if (containerEl.querySelector('input')) return;
       const currentVal = settings[settingKey] ?? fallbackVal;
       
-      const isBach = settingKey === 'bachGoal';
-      const earnedId = isBach ? 'bachEarnedNum' : 'mastEarnedNum';
+      let earnedId = 'bachEarnedNum';
+      if (settingKey === 'mastGoal') earnedId = 'mastEarnedNum';
+      if (settingKey === 'minor1Goal') earnedId = 'minor1EarnedNum';
+      if (settingKey === 'minor2Goal') earnedId = 'minor2EarnedNum';
+      if (settingKey === 'certGoal') earnedId = 'certEarnedNum';
+
       const earnedVal = document.getElementById(earnedId)?.textContent || '0';
 
       const input = document.createElement('input');
@@ -1019,6 +1495,10 @@
       const save = () => {
         const newVal = Number.parseFloat(input.value) || fallbackVal;
         settings[settingKey] = newVal;
+        if (settingKey === 'minor1Goal') settings.catGoals.minor1 = newVal;
+        if (settingKey === 'minor2Goal') settings.catGoals.minor2 = newVal;
+        if (settingKey === 'certGoal') settings.catGoals.cert = newVal;
+        if (settingKey === 'mastGoal') settings.catGoals.mast = newVal;
         persistSettings();
         recalculate();
       };
@@ -1061,6 +1541,10 @@
       const save = () => {
         const newVal = Number.parseFloat(input.value) || 0;
         settings.catGoals[catKey] = newVal;
+        if (catKey === 'minor1') settings.minor1Goal = newVal;
+        if (catKey === 'minor2') settings.minor2Goal = newVal;
+        if (catKey === 'cert') settings.certGoal = newVal;
+        if (catKey === 'mast') settings.mastGoal = newVal;
         persistSettings();
         recalculate();
       };
@@ -1090,12 +1574,21 @@
       });
     }
 
+    function getActiveCategoryKeys() {
+      const keys = ['core', 'major', 'elec', 'gccr'];
+      if (settings.showMinor1) keys.push('minor1');
+      if (settings.showMinor2) keys.push('minor2');
+      if (settings.showCert) keys.push('cert');
+      if (settings.showMasters) keys.push('mast');
+      return keys;
+    }
+
     function renderCategories() {
       const container = document.getElementById('catGridContainer');
       if (!container) return;
       container.innerHTML = '';
 
-      const keys = ['core', 'major', 'elec', 'gccr'];
+      const keys = getActiveCategoryKeys();
       keys.forEach(catKey => {
         const catName = settings.catNames[catKey] || defaultSettings.catNames[catKey];
         const catGoal = settings.catGoals[catKey] ?? defaultSettings.catGoals[catKey];
@@ -1108,14 +1601,16 @@
         
         item.addEventListener('click', toggleAllCategories);
 
+        const customColor = settings.colors[catKey] || '#8C9AA7';
+
         item.innerHTML = `
           <div class="cat-item-header">
             <input type="text" class="cat-name-input" value="${catName}">
-            <div class="cat-badge-area" id="cat_badge_area_${catKey}" onclick="makeCategoryEditable('${catKey}', this, ${catGoal})">
+            <div class="cat-badge-area" id="cat_badge_area_${catKey}" style="color: ${customColor};" onclick="makeCategoryEditable('${catKey}', this, ${catGoal})">
               <span id="earned-badge-${catKey}">0</span> / <span id="goal-badge-${catKey}">${catGoal}</span> cr
             </div>
           </div>
-          <div class="progress-track"><div class="progress-fill" id="bar-${catKey}"></div></div>
+          <div class="progress-track"><div class="progress-fill" id="bar-${catKey}" style="background: ${customColor};"></div></div>
           <div class="cat-dropdown-body" id="cat_dropdown_${catKey}">
             <div id="cat_list_${catKey}" style="margin-bottom: 6px;"></div>
             <button class="btn-add" type="button" onclick="addCustomCatItem('${catKey}', event)">+ Add Required Course</button>
@@ -1132,6 +1627,9 @@
 
         item.querySelector('.cat-name-input').addEventListener('input', (e) => {
           settings.catNames[catKey] = e.target.value;
+          if (catKey === 'minor1') { settings.minor1Name = e.target.value; const el = document.getElementById('minor1NameInput'); if (el) el.value = e.target.value; }
+          if (catKey === 'minor2') { settings.minor2Name = e.target.value; const el = document.getElementById('minor2NameInput'); if (el) el.value = e.target.value; }
+          if (catKey === 'cert') { settings.certName = e.target.value; const el = document.getElementById('certNameInput'); if (el) el.value = e.target.value; }
           persistSettings();
           updateCategoryDropdowns();
           updateAllCourseSelectors();
@@ -1175,7 +1673,7 @@
     }
 
     function renderCategoryItems() {
-      const keys = ['core', 'major', 'elec', 'gccr'];
+      const keys = getActiveCategoryKeys();
       keys.forEach(catKey => {
         const listContainer = document.getElementById(`cat_list_${catKey}`);
         const completedAccordion = document.getElementById(`cat_completed_accordion_${catKey}`);
@@ -1275,7 +1773,7 @@
             e.stopPropagation();
             item.prereqs = e.target.value;
             persistCatItems();
-            refreshAllCourseValidations(); // Replaced recalculate() here
+            refreshAllCourseValidations();
           });
 
           const termsContainer = document.createElement('div');
@@ -1303,7 +1801,7 @@
                 item.terms = item.terms.filter(t => t !== term);
               }
               persistCatItems();
-              refreshAllCourseValidations(); // Replaced recalculate() here
+              refreshAllCourseValidations();
             });
 
             labelEl.append(chk, document.createTextNode(term));
@@ -1315,7 +1813,6 @@
           listContainer.appendChild(row);
         });
 
-        // Render Completed Courses inside Category Dropdown
         if (completedCourses.length > 0) {
           if (completedAccordion) completedAccordion.style.display = 'block';
           let catCompCredsTotal = 0;
@@ -1365,7 +1862,10 @@
 
     function populateCategoryOptions(select, selectedValue) {
       select.innerHTML = '';
-      ['core', 'major', 'elec', 'gccr', 'none'].forEach(key => {
+      const keys = getActiveCategoryKeys();
+      keys.push('none');
+
+      keys.forEach(key => {
         const opt = document.createElement('option');
         opt.value = key;
 
@@ -1402,7 +1902,9 @@
       selectEl.appendChild(placeholder);
 
       let foundSelected = false;
-      ['core', 'major', 'elec', 'gccr'].forEach(catKey => {
+      const keys = getActiveCategoryKeys();
+
+      keys.forEach(catKey => {
         const items = catItemsStore[catKey] || [];
         if (!items.length) return;
         const group = document.createElement('optgroup');
@@ -1536,11 +2038,23 @@
           const label = document.createElement('span');
           label.className = 'sem-label';
           label.textContent = semName;
+
+          const titleRight = document.createElement('div');
+          titleRight.className = 'sem-title-right';
+
           const total = document.createElement('span');
           total.id = `tot_${semKey}`;
           total.style.cssText = 'font-size:10px; color:#64748b;';
-          total.textContent = '0 cr';
-          title.append(label, total);
+          total.textContent = '0 / 0 cr';
+
+          const flag = document.createElement('span');
+          flag.id = `flag_${semKey}`;
+          flag.className = 'underload-tag';
+          flag.style.display = 'none';
+          flag.textContent = '< 12 cr';
+
+          titleRight.append(flag, total);
+          title.append(label, titleRight);
 
           const list = document.createElement('div');
           list.className = 'course-list';
@@ -1743,7 +2257,8 @@
     }
 
     function isExistingCategoryItem(name) {
-      for (let catKey of ['core', 'major', 'elec', 'gccr']) {
+      const keys = getActiveCategoryKeys();
+      for (let catKey of keys) {
         const items = catItemsStore[catKey] || [];
         if (items.some(item => item.name === name)) return true;
       }
@@ -1753,7 +2268,8 @@
     function findRequiredCourse(name) {
       const target = String(name || '').trim().toLowerCase();
       if (!target) return null;
-      for (const catKey of ['core', 'major', 'elec', 'gccr']) {
+      const keys = getActiveCategoryKeys();
+      for (const catKey of keys) {
         const found = (catItemsStore[catKey] || []).find(item =>
           String(item.name || '').trim().toLowerCase() === target
         );
@@ -1803,12 +2319,10 @@
 
         const flags = [];
 
-        // Check duplicate placement
         if (nameVal && courseNameCount[nameVal] > 1) {
           flags.push('Class is placed on the plan twice');
         }
 
-        // Check term availability mismatch
         if (req && Array.isArray(req.terms) && req.terms.length > 0 && currentSem !== 'AP') {
           if (!req.terms.includes(currentSem)) {
             const offeredStr = req.terms.join(', ').toLowerCase();
@@ -1816,7 +2330,6 @@
           }
         }
 
-        // Check prerequisites
         if (req && row) {
           const raw = Array.isArray(req.prereqs) ? req.prereqs.join(',') : String(req.prereqs || '');
           const prereqs = raw.split(/[,;\n]+/).map(v => v.trim()).filter(Boolean);
@@ -1853,19 +2366,24 @@
       recalculate();
     }
 
-    function setRingOffset(ringId, percent) {
+    function setRingOffset(ringId, percent, isSmall = false) {
       const ring = document.getElementById(ringId);
       if (!ring) return;
+      const circ = isSmall ? SMALL_CIRCUMFERENCE : CIRCUMFERENCE;
       const capped = Math.min(100, Math.max(0, percent));
-      ring.style.strokeDasharray = CIRCUMFERENCE;
-      ring.style.strokeDashoffset = CIRCUMFERENCE - (capped / 100) * CIRCUMFERENCE;
+      ring.style.strokeDasharray = circ;
+      ring.style.strokeDashoffset = circ - (capped / 100) * circ;
     }
 
     function recalculate() {
       saveToStorage();
       let bachEarned = 0;
       let mastEarned = 0;
-      const catEarned = { core: 0, major: 0, elec: 0, gccr: 0 };
+      let minor1Earned = 0;
+      let minor2Earned = 0;
+      let certEarned = 0;
+
+      const catEarned = { core: 0, major: 0, elec: 0, gccr: 0, minor1: 0, minor2: 0, cert: 0, mast: 0 };
 
       defaultBlocks.forEach(y => {
         let yearBachEarned = 0;
@@ -1876,23 +2394,42 @@
         activeSems.forEach(semName => {
           const semKey = `${y.id}_${semName}`;
           const courses = store[semKey] || [];
-          let semTotal = 0;
+          let semEarned = 0;
+          let semPlanned = 0;
+
           courses.forEach(course => {
-            if (!course.done) return;
-            semTotal += course.credits;
-            if (course.degree === 'mast') {
-              mastEarned += course.credits;
-              yearMastEarned += course.credits;
-            } else {
-              bachEarned += course.credits;
-              yearBachEarned += course.credits;
+            semPlanned += course.credits;
+
+            if (course.done) {
+              semEarned += course.credits;
+              if (course.degree === 'mast') {
+                mastEarned += course.credits;
+                yearMastEarned += course.credits;
+              } else {
+                bachEarned += course.credits;
+                yearBachEarned += course.credits;
+              }
+
               if (Object.prototype.hasOwnProperty.call(catEarned, course.category)) {
                 catEarned[course.category] += course.credits;
               }
+              if (course.category === 'minor1') minor1Earned += course.credits;
+              if (course.category === 'minor2') minor2Earned += course.credits;
+              if (course.category === 'cert') certEarned += course.credits;
             }
           });
+
           const totalSpan = document.getElementById(`tot_${semKey}`);
-          if (totalSpan) totalSpan.textContent = `${semTotal} cr earned`;
+          if (totalSpan) totalSpan.textContent = `${semEarned} / ${semPlanned} cr`;
+
+          const flagEl = document.getElementById(`flag_${semKey}`);
+          if (flagEl) {
+            if (semKey !== 'hs_AP' && semPlanned < 12) {
+              flagEl.style.display = 'inline-block';
+            } else {
+              flagEl.style.display = 'none';
+            }
+          }
         });
 
         const yearBadge = document.getElementById(`badge_year_${y.id}`);
@@ -1903,38 +2440,61 @@
         }
       });
 
+      // Bachelor's Calculation
       const bachGoal = settings.bachGoal || 128;
-      const mastGoal = settings.mastGoal || 30;
-
       const bachPercent = Math.min(100, Math.round((bachEarned / bachGoal) * 100));
       const bachRem = Math.max(0, bachGoal - bachEarned);
       document.getElementById('bachPercent').textContent = `${bachPercent}%`;
-      
-      const bachEarnedEl = document.getElementById('bachEarnedNum');
-      if (bachEarnedEl) bachEarnedEl.textContent = bachEarned;
-      
-      const bachGoalEl = document.getElementById('bachGoalDisplay');
-      if (bachGoalEl) bachGoalEl.textContent = bachGoal;
-      
+      if (document.getElementById('bachEarnedNum')) document.getElementById('bachEarnedNum').textContent = bachEarned;
+      if (document.getElementById('bachGoalDisplay')) document.getElementById('bachGoalDisplay').textContent = bachGoal;
       document.getElementById('bachSub').textContent = `${bachRem} cr remaining`;
-      setRingOffset('bachRing', bachPercent);
+      setRingOffset('bachRing', bachPercent, false);
 
+      // Minor 1 Calculation
+      if (settings.showMinor1) {
+        const minor1Goal = settings.minor1Goal || 18;
+        const minor1Percent = Math.min(100, Math.round((minor1Earned / minor1Goal) * 100));
+        document.getElementById('minor1Percent').textContent = `${minor1Percent}%`;
+        if (document.getElementById('minor1EarnedNum')) document.getElementById('minor1EarnedNum').textContent = minor1Earned;
+        if (document.getElementById('minor1GoalDisplay')) document.getElementById('minor1GoalDisplay').textContent = minor1Goal;
+        setRingOffset('minor1Ring', minor1Percent, true);
+      }
+
+      // Minor 2 Calculation
+      if (settings.showMinor2) {
+        const minor2Goal = settings.minor2Goal || 18;
+        const minor2Percent = Math.min(100, Math.round((minor2Earned / minor2Goal) * 100));
+        document.getElementById('minor2Percent').textContent = `${minor2Percent}%`;
+        if (document.getElementById('minor2EarnedNum')) document.getElementById('minor2EarnedNum').textContent = minor2Earned;
+        if (document.getElementById('minor2GoalDisplay')) document.getElementById('minor2GoalDisplay').textContent = minor2Goal;
+        setRingOffset('minor2Ring', minor2Percent, true);
+      }
+
+      // Certificate Calculation
+      if (settings.showCert) {
+        const certGoal = settings.certGoal || 12;
+        const certPercent = Math.min(100, Math.round((certEarned / certGoal) * 100));
+        document.getElementById('certPercent').textContent = `${certPercent}%`;
+        if (document.getElementById('certEarnedNum')) document.getElementById('certEarnedNum').textContent = certEarned;
+        if (document.getElementById('certGoalDisplay')) document.getElementById('certGoalDisplay').textContent = certGoal;
+        setRingOffset('certRing', certPercent, false);
+      }
+
+      // Master's Calculation
       if (settings.showMasters) {
+        const mastGoal = settings.mastGoal || 30;
         const mastPercent = Math.min(100, Math.round((mastEarned / mastGoal) * 100));
         const mastRem = Math.max(0, mastGoal - mastEarned);
         document.getElementById('mastPercent').textContent = `${mastPercent}%`;
-        
-        const mastEarnedEl = document.getElementById('mastEarnedNum');
-        if (mastEarnedEl) mastEarnedEl.textContent = mastEarned;
-        
-        const mastGoalEl = document.getElementById('mastGoalDisplay');
-        if (mastGoalEl) mastGoalEl.textContent = mastGoal;
-        
+        if (document.getElementById('mastEarnedNum')) document.getElementById('mastEarnedNum').textContent = mastEarned;
+        if (document.getElementById('mastGoalDisplay')) document.getElementById('mastGoalDisplay').textContent = mastGoal;
         document.getElementById('mastSub').textContent = `${mastRem} cr remaining`;
-        setRingOffset('mastRing', mastPercent);
+        setRingOffset('mastRing', mastPercent, false);
       }
 
-      ['core', 'major', 'elec', 'gccr'].forEach(catKey => {
+      // Requirement Progress Bars
+      const activeKeys = getActiveCategoryKeys();
+      activeKeys.forEach(catKey => {
         const earned = catEarned[catKey] || 0;
         const goal = settings.catGoals[catKey] || 0;
         const pct = goal > 0 ? Math.min(100, Math.round((earned / goal) * 100)) : 0;
